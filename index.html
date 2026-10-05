@@ -1,8 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 
 <title>SNJ Mining Bot</title>
 
@@ -10,409 +12,502 @@
 
 <style>
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    -webkit-tap-highlight-color:transparent;
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  -webkit-tap-highlight-color:transparent;
 }
 
 body{
-    min-height:100vh;
-    font-family:Arial,sans-serif;
-    color:white;
-    background:
-        radial-gradient(circle at 50% 25%,#263b62 0%,#0a1427 35%,#030814 75%);
-    overflow-x:hidden;
+  min-height:100vh;
+  font-family:Arial,sans-serif;
+  color:#fff;
+  background:
+    radial-gradient(circle at 50% 28%,#233c63 0,#0b1930 38%,#020711 100%);
+  overflow-x:hidden;
 }
 
 body:before{
-    content:"";
-    position:fixed;
-    left:0;
-    right:0;
-    bottom:0;
-    height:45%;
-    z-index:-1;
-    opacity:.35;
-    background:
-        linear-gradient(90deg,
-        transparent 0 3%,
-        #101d32 3% 8%,
-        transparent 8% 10%,
-        #172844 10% 16%,
-        transparent 16% 18%,
-        #0e1b30 18% 25%,
-        transparent 25% 27%,
-        #172844 27% 32%,
-        transparent 32% 35%,
-        #0c1930 35% 43%,
-        transparent 43% 45%,
-        #172844 45% 51%,
-        transparent 51% 54%,
-        #0d1b31 54% 62%,
-        transparent 62% 64%,
-        #172844 64% 71%,
-        transparent 71% 74%,
-        #0d1b31 74% 82%,
-        transparent 82% 84%,
-        #172844 84% 91%,
-        transparent 91%);
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.35;
+  background:
+    linear-gradient(90deg,
+    transparent 0 5%,
+    #071a31 5% 12%,
+    transparent 12% 15%,
+    #081b35 15% 24%,
+    transparent 24% 28%,
+    #06172d 28% 38%,
+    transparent 38% 43%,
+    #071b35 43% 51%,
+    transparent 51% 56%,
+    #06172d 56% 67%,
+    transparent 67% 72%,
+    #071a32 72% 82%,
+    transparent 82% 87%,
+    #06172d 87% 96%,
+    transparent 96%);
+  background-position:bottom;
+  background-size:100% 42%;
+  background-repeat:no-repeat;
 }
 
 .app{
-    width:100%;
-    max-width:520px;
-    margin:auto;
-    padding:14px;
-    padding-bottom:100px;
+  width:100%;
+  max-width:540px;
+  margin:auto;
+  padding:12px;
+  padding-bottom:105px;
+  position:relative;
+  z-index:2;
 }
 
-/* TOP BAR */
+/* TOP */
 
-.topbar{
-    height:78px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:10px 14px;
-    border:1px solid #c99722;
-    border-radius:24px;
-    background:linear-gradient(135deg,#071426,#101d31);
-    box-shadow:
-        0 0 20px #d9a92722,
-        inset 0 0 15px #d9a9270d;
+.top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:9px 12px;
+  border:1px solid #d5a72d;
+  border-radius:24px;
+  background:#061326eF;
+  box-shadow:
+    0 0 20px #d9aa321c,
+    inset 0 0 20px #ffffff05;
 }
 
 .brand{
-    display:flex;
-    align-items:center;
-    gap:10px;
+  display:flex;
+  align-items:center;
+  gap:10px;
 }
 
-.logo{
-    width:55px;
-    height:55px;
-    border-radius:50%;
-    display:grid;
-    place-items:center;
-    font-size:19px;
-    font-weight:bold;
-    color:#17100a;
-    background:linear-gradient(145deg,#fff1a3,#d89f19,#fff0a0);
-    border:2px solid #f8d96b;
-    box-shadow:0 0 18px #f0bd3d66;
+.brandLogo{
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  background:
+    radial-gradient(circle,#191919 0 54%,#d7a72d 56% 62%,#080808 64%);
+  border:2px solid #f2cd58;
+  box-shadow:0 0 14px #f1c53b77;
+  color:#f7cf54;
+  font-weight:bold;
+}
+
+.brandLogo small{
+  font-size:7px;
+  margin-top:-2px;
 }
 
 .brandText b{
-    display:block;
-    font-size:22px;
+  font-size:21px;
 }
 
 .brandText b span{
-    color:#f2c744;
+  color:#f5c83e;
 }
 
 .brandText small{
-    color:#f0d26c;
-    font-size:11px;
+  display:block;
+  color:#e5c55d;
+  font-size:11px;
+  margin-top:3px;
 }
 
-.topButtons{
-    display:flex;
-    gap:9px;
+.topBtns{
+  display:flex;
+  gap:7px;
 }
 
-.circleBtn{
-    width:45px;
-    height:45px;
-    border-radius:50%;
-    border:1px solid #e2b83d;
-    background:#101c30;
-    color:#ffd75a;
-    font-size:21px;
+.topBtns button{
+  width:43px;
+  height:43px;
+  border-radius:50%;
+  background:#101e34;
+  border:1px solid #d4a52c;
+  color:#ffd34d;
+  font-size:21px;
 }
 
 /* BALANCE */
 
-.balanceBox{
-    margin-top:14px;
-    padding:18px;
-    border:1px solid #d8a52e;
-    border-radius:25px;
-    background:linear-gradient(135deg,#071426,#0d1b2f);
-    box-shadow:0 0 25px #d8a52e18;
+.balance{
+  margin-top:14px;
+  padding:17px;
+  border:1px solid #d5a72d;
+  border-radius:25px;
+  background:#061426ee;
+  box-shadow:0 0 25px #d5a72d12;
 }
 
 .balanceTop{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
-.balanceTitle{
-    display:flex;
-    align-items:center;
-    gap:12px;
+.balanceLeft{
+  display:flex;
+  gap:12px;
+  align-items:center;
 }
 
 .walletIcon{
-    font-size:35px;
+  font-size:36px;
 }
 
-.balanceTitle small{
-    display:block;
-    color:#bfc7d5;
-    margin-top:4px;
+.balanceLeft b{
+  font-size:20px;
 }
 
-.mainBalance{
-    display:flex;
-    align-items:center;
-    gap:7px;
+.balanceLeft small{
+  display:block;
+  color:#adb9ca;
+  margin-top:4px;
+}
+
+.total{
+  display:flex;
+  align-items:center;
+  gap:6px;
 }
 
 .miniCoin{
-    width:43px;
-    height:43px;
-    border-radius:50%;
-    display:grid;
-    place-items:center;
-    color:#15100a;
-    font-weight:bold;
-    background:linear-gradient(145deg,#fff2a5,#d8a52d,#ffe994);
+  width:45px;
+  height:45px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(145deg,#fff19b,#d89e1c,#fff0a0);
+  color:#111;
+  font-size:10px;
+  font-weight:bold;
+  border:2px solid #f5d265;
 }
 
-.mainBalance strong{
-    font-size:34px;
-    color:#ffd653;
+.total strong{
+  color:#ffd449;
+  font-size:29px;
 }
 
-.mainBalance span{
-    color:#f4d75e;
-    font-size:18px;
+.total span{
+  color:#f0c949;
 }
 
-.balanceLine{
-    height:1px;
-    background:#d9ae3a66;
-    margin:15px 0;
+.divider{
+  height:1px;
+  background:#d8ad3a55;
+  margin:15px 0;
 }
 
-.balanceStats{
-    display:flex;
-    justify-content:space-around;
-    text-align:center;
+.stats{
+  display:flex;
+  text-align:center;
 }
 
 .stat{
-    flex:1;
+  flex:1;
 }
 
 .stat:not(:last-child){
-    border-right:1px solid #65708755;
+  border-right:1px solid #65718855;
 }
 
 .stat small{
-    display:block;
-    color:#b6bfce;
-    margin-bottom:5px;
+  display:block;
+  color:#aab5c6;
+  margin-bottom:5px;
 }
 
 .stat b{
-    color:#ffd44f;
-    font-size:20px;
+  color:#ffd54c;
+  font-size:18px;
 }
 
-/* HERO */
+/* N TOKEN */
 
-.hero{
-    text-align:center;
-    padding:28px 0 20px;
+.nbox{
+  margin-top:13px;
+  padding:13px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border:1px solid #557da9;
+  border-radius:22px;
+  background:linear-gradient(135deg,#061426,#102b4d);
 }
 
-.heroCoin{
-    width:205px;
-    height:205px;
-    margin:auto;
-    border-radius:50%;
-    display:grid;
-    place-items:center;
-    position:relative;
-    background:
-        radial-gradient(circle,#ffd951 0 45%,#d79816 46% 58%,#fff0a0 59% 62%,#a96d0c 63% 100%);
-    border:8px solid #d7a52d;
-    box-shadow:
-        0 0 20px #ffd84c88,
-        0 0 60px #d9a32e44,
-        inset 0 0 30px #fff1a077;
-    transition:.2s;
+.nleft{
+  display:flex;
+  align-items:center;
+  gap:12px;
 }
 
-.heroCoin:before{
-    content:"";
-    position:absolute;
-    inset:13px;
-    border:2px solid #fff0a0;
-    border-radius:50%;
+.ncoin{
+  width:55px;
+  height:55px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font-size:30px;
+  font-weight:bold;
+  color:#ead0b8;
+  background:
+    radial-gradient(circle,#15517c 0 48%,#d5a277 49% 55%,#0b2946 56%);
+  border:3px solid #d8a77e;
+  box-shadow:0 0 17px #438fca55;
 }
 
-.heroCoin span{
-    position:relative;
-    z-index:2;
-    font-size:75px;
-    font-weight:bold;
-    color:#17100a;
-    text-shadow:0 2px 2px #fff3a055;
+.nleft b{
+  font-size:18px;
 }
 
-.heroCoin:active{
-    transform:scale(.94);
-    box-shadow:0 0 55px #ffd84caa;
+.nleft small{
+  display:block;
+  color:#9db2ca;
+  margin-top:4px;
+}
+
+.namount{
+  color:#f1cfad;
+  font-size:23px;
+  font-weight:bold;
+}
+
+/* PAGES */
+
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
+
+/* MINING */
+
+.mining{
+  text-align:center;
+  padding-top:28px;
+}
+
+.coinWrap{
+  width:205px;
+  height:205px;
+  margin:auto;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:
+    radial-gradient(circle,
+      #fff080 0 43%,
+      #e0a827 44% 55%,
+      #fff0a0 56% 60%,
+      #9d680c 61% 100%);
+  border:8px solid #d5a22b;
+  box-shadow:
+    0 0 20px #f5c83d66,
+    0 0 55px #f5c83d22;
+  transition:.2s;
+}
+
+.coinWrap:active{
+  transform:scale(.94);
+}
+
+.mainS{
+  font-size:78px;
+  font-weight:bold;
+  color:#111;
 }
 
 .miningTitle{
-    margin-top:20px;
-    color:#ffd54e;
-    font-size:22px;
-    font-weight:bold;
-    letter-spacing:2px;
+  margin-top:17px;
+  color:#ffd448;
+  font-size:25px;
+  font-weight:bold;
+  letter-spacing:2px;
 }
 
 .timer{
-    margin:12px auto;
-    padding:10px;
-    border:2px solid #e1b631;
-    border-radius:30px;
-    max-width:360px;
-    background:#071426;
-    font-size:32px;
-    font-weight:bold;
+  margin:14px auto 10px;
+  max-width:420px;
+  padding:11px;
+  border:2px solid #e0b534;
+  border-radius:40px;
+  background:#061426;
+  font-size:34px;
+  font-weight:bold;
 }
 
 .rate{
-    color:#aeb8c8;
-    margin-bottom:17px;
+  color:#aeb8c8;
+  margin-bottom:17px;
 }
 
-/* BUTTONS */
+.rate b{
+  color:#f1ce4a;
+}
 
 .claim{
-    width:100%;
-    padding:17px;
-    border:none;
-    border-radius:35px;
-    font-size:20px;
-    font-weight:bold;
-    color:#17100a;
-    background:linear-gradient(90deg,#d99e18,#ffe76c,#d99e18);
-    box-shadow:0 0 20px #e9bd3b55;
+  width:100%;
+  padding:17px;
+  border:1px solid #fff0a1;
+  border-radius:36px;
+  background:linear-gradient(90deg,#d99c18,#ffe56a,#d99c18);
+  color:#17110a;
+  font-size:20px;
+  font-weight:bold;
+  box-shadow:0 0 18px #f2c33b44;
 }
 
 .claim:active{
-    transform:scale(.98);
+  transform:scale(.98);
 }
 
 .ad{
-    width:100%;
-    margin-top:12px;
-    padding:15px;
-    border-radius:20px;
-    color:white;
-    background:linear-gradient(90deg,#071b48,#0d3477,#071b48);
-    border:1px solid #168cff;
-    box-shadow:0 0 15px #168cff33;
+  width:100%;
+  margin-top:12px;
+  padding:14px;
+  border-radius:20px;
+  background:#092044;
+  border:1px solid #248dff;
+  color:white;
 }
 
 .ad b{
-    color:#fff;
-    font-size:18px;
+  font-size:18px;
 }
 
 .ad small{
-    display:block;
-    color:#b9d9ff;
-    margin-top:4px;
+  display:block;
+  color:#b9d8ff;
+  margin-top:4px;
+}
+
+/* OTHER PAGES */
+
+.cardPage{
+  margin-top:22px;
+  padding:22px 18px;
+  border-radius:23px;
+  background:#071527;
+  border:1px solid #d5a72d;
+}
+
+.cardPage h2{
+  color:#ffd54a;
+  margin-bottom:10px;
+}
+
+.cardPage p{
+  color:#aeb8c8;
+  line-height:1.6;
+}
+
+.action{
+  width:100%;
+  margin-top:17px;
+  padding:15px;
+  border-radius:16px;
+  border:1px solid #d4a52d;
+  background:#101f36;
+  color:#ffd44b;
+  font-weight:bold;
+  font-size:16px;
 }
 
 /* BOTTOM NAV */
 
 .nav{
-    position:fixed;
-    left:50%;
-    bottom:8px;
-    transform:translateX(-50%);
-    width:calc(100% - 20px);
-    max-width:500px;
-    display:flex;
-    gap:5px;
-    padding:8px;
-    border:1px solid #b98920;
-    border-radius:22px;
-    background:#071120ee;
-    backdrop-filter:blur(10px);
-    z-index:20;
+  position:fixed;
+  left:50%;
+  bottom:7px;
+  transform:translateX(-50%);
+  width:calc(100% - 16px);
+  max-width:525px;
+  padding:6px;
+  display:flex;
+  gap:3px;
+  border:1px solid #d4a52d;
+  border-radius:22px;
+  background:#061223f5;
+  backdrop-filter:blur(14px);
+  z-index:30;
 }
 
 .nav button{
-    flex:1;
-    border:0;
-    background:transparent;
-    color:#b9c1ce;
-    padding:8px 2px;
-    border-radius:15px;
-    font-size:10px;
+  flex:1;
+  border:0;
+  border-radius:15px;
+  padding:8px 1px;
+  background:transparent;
+  color:#aab5c6;
+  font-size:10px;
 }
 
 .nav button span{
-    display:block;
-    font-size:21px;
-    margin-bottom:3px;
+  display:block;
+  font-size:21px;
+  margin-bottom:3px;
 }
 
-.nav .active{
-    color:#ffd34c;
-    background:#c7972117;
+.nav button.active{
+  color:#ffd54b;
+  background:#d6a62b18;
+}
+
+/* FLYING COINS */
+
+.flyCoin{
+  position:fixed;
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(145deg,#fff49a,#dba31f);
+  border:2px solid #fff0a0;
+  color:#111;
+  font-size:9px;
+  font-weight:bold;
+  z-index:100;
+  pointer-events:none;
+  box-shadow:0 0 13px #ffd84c;
+  transition:
+    left .75s cubic-bezier(.2,.8,.2,1),
+    top .75s cubic-bezier(.2,.8,.2,1),
+    transform .75s ease,
+    opacity .75s ease;
 }
 
 /* TOAST */
 
 .toast{
-    position:fixed;
-    top:20px;
-    left:50%;
-    transform:translateX(-50%) translateY(-100px);
-    padding:13px 20px;
-    border-radius:20px;
-    background:#15233a;
-    border:1px solid #e0b53c;
-    color:#ffd957;
-    transition:.3s;
-    z-index:50;
+  position:fixed;
+  left:50%;
+  top:18px;
+  transform:translate(-50%,-100px);
+  padding:12px 19px;
+  border-radius:20px;
+  background:#102039;
+  border:1px solid #d5a72d;
+  color:#ffd64d;
+  z-index:200;
+  transition:.3s;
+  white-space:nowrap;
 }
 
 .toast.show{
-    transform:translateX(-50%) translateY(0);
-}
-
-/* MOBILE */
-
-@media(max-width:380px){
-    .mainBalance strong{
-        font-size:27px;
-    }
-
-    .heroCoin{
-        width:175px;
-        height:175px;
-    }
-
-    .heroCoin span{
-        font-size:62px;
-    }
-
-    .nav button{
-        font-size:8px;
-    }
+  transform:translate(-50%,0);
 }
 </style>
 </head>
@@ -421,121 +516,241 @@ body:before{
 
 <div class="app">
 
-    <!-- TOP -->
+<!-- HEADER -->
 
-    <div class="topbar">
+<div class="top">
 
-        <div class="brand">
+  <div class="brand">
 
-            <div class="logo">
-                SNJ
-            </div>
-
-            <div class="brandText">
-                <b><span>SNJ</span> Mining Bot</b>
-                <small>Mine Today • Build Tomorrow</small>
-            </div>
-
-        </div>
-
-        <div class="topButtons">
-            <button class="circleBtn" id="telegramBtn">➤</button>
-            <button class="circleBtn" id="settingsBtn">⚙</button>
-        </div>
-
+    <div class="brandLogo">
+      <div>♛</div>
+      <div>SNJ</div>
     </div>
 
-
-    <!-- BALANCE -->
-
-    <div class="balanceBox">
-
-        <div class="balanceTop">
-
-            <div class="balanceTitle">
-
-                <div class="walletIcon">👛</div>
-
-                <div>
-                    <b>My SNJ Balance</b>
-                    <small>Total Balance</small>
-                </div>
-
-            </div>
-
-            <div class="mainBalance">
-
-                <div class="miniCoin">SNJ</div>
-
-                <strong id="snjBalance">0.00</strong>
-
-                <span>SNJ</span>
-
-            </div>
-
-        </div>
-
-        <div class="balanceLine"></div>
-
-        <div class="balanceStats">
-
-            <div class="stat">
-                <small>⛏ Mining</small>
-                <b id="miningBalance">0.00</b>
-                <span> SNJ</span>
-            </div>
-
-            <div class="stat">
-                <small>👛 Wallet</small>
-                <b id="walletBalance">0.00</b>
-                <span> SNJ</span>
-            </div>
-
-            <div class="stat">
-                <small>N Token</small>
-                <b id="nBalance">0.00</b>
-            </div>
-
-        </div>
-
+    <div class="brandText">
+      <b><span>SNJ</span> Mining Bot</b>
+      <small>Mine Today • Build Tomorrow</small>
     </div>
 
+  </div>
 
-    <!-- MINING -->
+  <div class="topBtns">
+    <button onclick="openTelegram()">➤</button>
+    <button onclick="showToast('Settings coming soon')">⚙</button>
+  </div>
 
-    <div class="hero">
+</div>
 
-        <div class="heroCoin" id="coin">
-            <span>S</span>
-        </div>
 
-        <div class="miningTitle">
-            ⛏ MINING
-        </div>
+<!-- BALANCE -->
 
-        <div class="timer" id="timer">
-            04:00:00
-        </div>
+<div class="balance">
 
-        <div class="rate">
-            Mining Rate • <b>60 SNJ / 4 Hours</b>
-        </div>
+  <div class="balanceTop">
 
-        <button class="claim" id="claim">
-            🪙 CLAIM <span id="claimAmount">0.00</span> SNJ
-        </button>
+    <div class="balanceLeft">
+      <div class="walletIcon">👛</div>
 
-        <button class="ad" id="ad">
-
-            <b>▶ WATCH AD ×2</b>
-
-            <small>
-                Watch rewarded ads and earn more later
-            </small>
-
-        </button>
-
+      <div>
+        <b>My SNJ Balance</b>
+        <small>Total Balance</small>
+      </div>
     </div>
+
+    <div class="total">
+      <div class="miniCoin">SNJ</div>
+
+      <strong id="totalBalance">
+        0.00
+      </strong>
+
+      <span>SNJ</span>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="stats">
+
+    <div class="stat">
+      <small>⛏ Mining</small>
+      <b id="pending">0.00</b> SNJ
+    </div>
+
+    <div class="stat">
+      <small>👛 Wallet</small>
+      <b id="wallet">0.00</b> SNJ
+    </div>
+
+    <div class="stat">
+      <small>N Token</small>
+      <b id="nBalance">0.00</b>
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- N TOKEN -->
+
+<div class="nbox">
+
+  <div class="nleft">
+
+    <div class="ncoin">N</div>
+
+    <div>
+      <b>N TOKEN</b>
+      <small>Referral + Tasks Reward</small>
+    </div>
+
+  </div>
+
+  <div class="namount">
+    <span id="nTop">0.00</span> N
+  </div>
+
+</div>
+
+
+<!-- MINING PAGE -->
+
+<div id="minePage" class="page active">
+
+  <div class="mining">
+
+    <div class="coinWrap">
+      <div class="mainS">S</div>
+    </div>
+
+    <div class="miningTitle">
+      ⛏ MINING
+    </div>
+
+    <div class="timer" id="timer">
+      04:00:00
+    </div>
+
+    <div class="rate">
+      Mining Rate • <b>60 SNJ / 4 Hours</b>
+    </div>
+
+    <button class="claim" id="claimButton">
+      🪙 CLAIM
+      <span id="claimAmount">0.00</span>
+      SNJ
+    </button>
+
+    <button class="ad" onclick="watchAd()">
+      <b>▶ WATCH AD ×2</b>
+      <small>Get 2× Reward</small>
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- BOOST -->
+
+<div id="boostPage" class="page">
+
+  <div class="cardPage">
+
+    <h2>🚀 Boost</h2>
+
+    <p>
+      Boost system will be added here later.
+    </p>
+
+    <button class="action"
+    onclick="showToast('Boost coming soon')">
+      BOOST — COMING SOON
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- TASKS -->
+
+<div id="tasksPage" class="page">
+
+  <div class="cardPage">
+
+    <h2>📋 Tasks</h2>
+
+    <p>
+      Complete tasks to earn N Token.
+    </p>
+
+    <button class="action"
+    onclick="demoTask()">
+      Complete Demo Task +1 N
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- FRIENDS -->
+
+<div id="friendsPage" class="page">
+
+  <div class="cardPage">
+
+    <h2>👥 Referral</h2>
+
+    <p>
+      Invite friends and earn N Token.
+    </p>
+
+    <button class="action"
+    onclick="demoReferral()">
+      Demo Referral +1 N
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- SWAP -->
+
+<div id="swapPage" class="page">
+
+  <div class="cardPage">
+
+    <h2>↕ Swap</h2>
+
+    <p>
+      SNJ / N Token Swap will be added later.
+    </p>
+
+  </div>
+
+</div>
+
+
+<!-- WALLET -->
+
+<div id="walletPage" class="page">
+
+  <div class="cardPage">
+
+    <h2>👛 Wallet</h2>
+
+    <p>
+      Wallet and withdrawal system will be connected later.
+    </p>
+
+  </div>
+
+</div>
 
 </div>
 
@@ -544,35 +759,41 @@ body:before{
 
 <div class="nav">
 
-    <button class="active" data-name="Mine">
-        <span>⛏</span>
-        Mine
-    </button>
+  <button class="active"
+  onclick="openPage('mine',this)">
+    <span>⛏</span>
+    Mine
+  </button>
 
-    <button data-name="Boost">
-        <span>🚀</span>
-        Boost
-    </button>
+  <button
+  onclick="openPage('boost',this)">
+    <span>🚀</span>
+    Boost
+  </button>
 
-    <button data-name="Tasks">
-        <span>📋</span>
-        Tasks
-    </button>
+  <button
+  onclick="openPage('tasks',this)">
+    <span>📋</span>
+    Tasks
+  </button>
 
-    <button data-name="Friends">
-        <span>👥</span>
-        Friends
-    </button>
+  <button
+  onclick="openPage('friends',this)">
+    <span>👥</span>
+    Friends
+  </button>
 
-    <button data-name="Swap">
-        <span>↕</span>
-        Swap
-    </button>
+  <button
+  onclick="openPage('swap',this)">
+    <span>↕</span>
+    Swap
+  </button>
 
-    <button data-name="Wallet">
-        <span>👛</span>
-        Wallet
-    </button>
+  <button
+  onclick="openPage('wallet',this)">
+    <span>👛</span>
+    Wallet
+  </button>
 
 </div>
 
@@ -584,326 +805,546 @@ body:before{
 
 /* TELEGRAM */
 
-const tg = window.Telegram?.WebApp;
+const tg =
+window.Telegram &&
+window.Telegram.WebApp
+? window.Telegram.WebApp
+: null;
 
 if(tg){
 
-    tg.ready();
+  tg.ready();
+  tg.expand();
 
-    tg.expand();
-
-    try{
-        tg.setHeaderColor("#050b18");
-        tg.setBackgroundColor("#050b18");
-    }catch(e){}
+  try{
+    tg.setHeaderColor("#050b18");
+    tg.setBackgroundColor("#050b18");
+  }catch(e){}
 
 }
+
+
+/* SETTINGS */
+
+const FOUR_HOURS =
+4 * 60 * 60 * 1000;
+
+const MAX_REWARD =
+60;
 
 
 /* DATA */
 
-let snj = Number(
-    localStorage.getItem("snjBalance") || 0
+let wallet =
+Number(
+  localStorage.getItem("snjWallet") || 0
 );
 
-let nToken = Number(
-    localStorage.getItem("nToken") || 0
+let nToken =
+Number(
+  localStorage.getItem("nToken") || 0
 );
 
-let miningStart = Number(
-    localStorage.getItem("miningStart") || Date.now()
+let miningStart =
+Number(
+  localStorage.getItem("miningStart")
+  || Date.now()
 );
-
-const MINING_TIME = 4 * 60 * 60 * 1000;
-
-const MAX_REWARD = 60;
 
 
 /* SAVE */
 
-function saveData(){
+function save(){
 
-    localStorage.setItem(
-        "snjBalance",
-        snj
-    );
+  localStorage.setItem(
+    "snjWallet",
+    wallet
+  );
 
-    localStorage.setItem(
-        "nToken",
-        nToken
-    );
+  localStorage.setItem(
+    "nToken",
+    nToken
+  );
 
-    localStorage.setItem(
-        "miningStart",
-        miningStart
-    );
+  localStorage.setItem(
+    "miningStart",
+    miningStart
+  );
 
 }
 
 
-/* UPDATE */
+/* MINING REWARD */
+
+function getMiningReward(){
+
+  const elapsed =
+  Date.now() - miningStart;
+
+  if(elapsed <= 0)
+    return 0;
+
+  const reward =
+    (elapsed / FOUR_HOURS)
+    * MAX_REWARD;
+
+  return Math.min(
+    reward,
+    MAX_REWARD
+  );
+
+}
+
+
+/* UPDATE SCREEN */
 
 function update(){
 
-    let elapsed =
-        Date.now() - miningStart;
+  const pending =
+    getMiningReward();
 
-    let reward =
-        Math.min(
-            Math.max(
-                0,
-                elapsed / MINING_TIME
-            ) * MAX_REWARD,
-            MAX_REWARD
-        );
+  const total =
+    wallet + pending;
 
 
-    document.getElementById(
-        "snjBalance"
-    ).textContent =
-        snj.toFixed(2);
+  document.getElementById(
+    "wallet"
+  ).textContent =
+  wallet.toFixed(2);
 
 
-    document.getElementById(
-        "walletBalance"
-    ).textContent =
-        snj.toFixed(2);
+  document.getElementById(
+    "pending"
+  ).textContent =
+  pending.toFixed(2);
 
 
-    document.getElementById(
-        "miningBalance"
-    ).textContent =
-        reward.toFixed(2);
+  document.getElementById(
+    "totalBalance"
+  ).textContent =
+  total.toFixed(2);
 
 
-    document.getElementById(
-        "nBalance"
-    ).textContent =
-        nToken.toFixed(2);
+  document.getElementById(
+    "nBalance"
+  ).textContent =
+  nToken.toFixed(2);
 
 
-    document.getElementById(
-        "claimAmount"
-    ).textContent =
-        reward.toFixed(2);
+  document.getElementById(
+    "nTop"
+  ).textContent =
+  nToken.toFixed(2);
 
 
-    if(reward >= MAX_REWARD){
-
-        document.getElementById(
-            "timer"
-        ).textContent =
-            "READY";
-
-        return;
-
-    }
+  document.getElementById(
+    "claimAmount"
+  ).textContent =
+  pending.toFixed(2);
 
 
-    let remaining =
-        MINING_TIME - elapsed;
+  const remaining =
+    FOUR_HOURS -
+    (Date.now() - miningStart);
 
 
-    let h =
-        Math.floor(
-            remaining / 3600000
-        );
-
-    let m =
-        Math.floor(
-            (remaining % 3600000) / 60000
-        );
-
-    let s =
-        Math.floor(
-            (remaining % 60000) / 1000
-        );
-
+  if(remaining <= 0){
 
     document.getElementById(
-        "timer"
+      "timer"
     ).textContent =
+    "READY";
 
-        String(h).padStart(2,"0")
-        + ":" +
+    return;
 
-        String(m).padStart(2,"0")
-        + ":" +
+  }
 
-        String(s).padStart(2,"0");
+
+  const hours =
+    Math.floor(
+      remaining / 3600000
+    );
+
+  const minutes =
+    Math.floor(
+      (remaining % 3600000)
+      / 60000
+    );
+
+  const seconds =
+    Math.floor(
+      (remaining % 60000)
+      / 1000
+    );
+
+
+  document.getElementById(
+    "timer"
+  ).textContent =
+
+    String(hours).padStart(2,"0")
+    + ":"
+    +
+    String(minutes).padStart(2,"0")
+    + ":"
+    +
+    String(seconds).padStart(2,"0");
 
 }
 
 
-/* CLAIM */
+/* CLAIM + FLYING COINS */
 
 document.getElementById(
-    "claim"
-).onclick = function(){
+"claimButton"
+).addEventListener(
+"click",
+function(){
 
-    let elapsed =
-        Date.now() - miningStart;
-
-
-    let reward =
-        Math.min(
-            Math.max(
-                0,
-                elapsed / MINING_TIME
-            ) * MAX_REWARD,
-            MAX_REWARD
-        );
+  const reward =
+    getMiningReward();
 
 
-    if(reward <= 0){
-
-        showToast(
-            "Mining শুরু হয়নি"
-        );
-
-        return;
-
-    }
-
-
-    snj += reward;
-
-    miningStart =
-        Date.now();
-
-
-    saveData();
-
-    update();
+  if(reward <= 0){
 
     showToast(
-        "+" + reward.toFixed(2)
-        + " SNJ Claimed!"
+      "No SNJ available yet"
     );
 
-};
+    return;
+
+  }
 
 
-/* COIN TAP */
-
-document.getElementById(
-    "coin"
-).onclick = function(){
-
-    this.style.transform =
-        "scale(.94)";
-
-    setTimeout(()=>{
-        this.style.transform =
-            "";
-    },150);
-
-};
-
-
-/* AD */
-
-document.getElementById(
-    "ad"
-).onclick = function(){
-
-    showToast(
-        "Real rewarded ads will be connected later."
+  const claimButton =
+    document.getElementById(
+      "claimButton"
     );
 
-};
+
+  /* START COIN ANIMATION */
+
+  createFlyingCoins(
+    claimButton,
+    Math.min(
+      12,
+      Math.max(
+        4,
+        Math.floor(reward / 2)
+      )
+    )
+  );
 
 
-/* TOP BUTTONS */
+  /* ADD TO WALLET */
 
-document.getElementById(
-    "telegramBtn"
-).onclick = function(){
-
-    if(tg){
-
-        tg.openTelegramLink(
-            "https://t.me/SNJMiningbot"
-        );
-
-    }
-
-};
+  wallet += reward;
 
 
-document.getElementById(
-    "settingsBtn"
-).onclick = function(){
+  /* NEW MINING CYCLE */
 
-    showToast(
-        "Settings coming soon"
-    );
-
-};
+  miningStart =
+    Date.now();
 
 
-/* NAV */
+  save();
 
-document.querySelectorAll(
-    ".nav button"
-).forEach(button=>{
 
-    button.onclick = function(){
+  setTimeout(
+    update,
+    650
+  );
 
-        document.querySelectorAll(
-            ".nav button"
-        ).forEach(b=>{
-            b.classList.remove("active");
-        });
 
-        this.classList.add("active");
-
-        let name =
-            this.dataset.name;
-
-        if(name !== "Mine"){
-
-            showToast(
-                name + " section coming soon"
-            );
-
-        }
-
-    };
+  showToast(
+    "+" +
+    reward.toFixed(2) +
+    " SNJ Claimed!"
+  );
 
 });
 
 
+/* FLYING COINS */
+
+function createFlyingCoins(
+  source,
+  amount
+){
+
+  const sourceRect =
+    source.getBoundingClientRect();
+
+
+  const balance =
+    document.getElementById(
+      "totalBalance"
+    );
+
+
+  const targetRect =
+    balance.getBoundingClientRect();
+
+
+  const startX =
+    sourceRect.left
+    + sourceRect.width / 2;
+
+
+  const startY =
+    sourceRect.top
+    + sourceRect.height / 2;
+
+
+  const targetX =
+    targetRect.left
+    + targetRect.width / 2;
+
+
+  const targetY =
+    targetRect.top
+    + targetRect.height / 2;
+
+
+  for(
+    let i=0;
+    i<amount;
+    i++
+  ){
+
+    const coin =
+      document.createElement(
+        "div"
+      );
+
+
+    coin.className =
+      "flyCoin";
+
+    coin.textContent =
+      "S";
+
+
+    document.body.appendChild(
+      coin
+    );
+
+
+    const angle =
+      Math.random()
+      * Math.PI
+      * 2;
+
+
+    const spread =
+      60 +
+      Math.random() * 80;
+
+
+    const sx =
+      startX +
+      Math.cos(angle)
+      * spread;
+
+
+    const sy =
+      startY +
+      Math.sin(angle)
+      * spread;
+
+
+    coin.style.left =
+      sx + "px";
+
+    coin.style.top =
+      sy + "px";
+
+
+    setTimeout(
+      ()=>{
+
+        coin.style.left =
+          targetX + "px";
+
+        coin.style.top =
+          targetY + "px";
+
+        coin.style.transform =
+          "scale(.35) rotate(360deg)";
+
+        coin.style.opacity =
+          "0";
+
+      },
+      80 + i * 35
+    );
+
+
+    setTimeout(
+      ()=>{
+
+        coin.remove();
+
+      },
+      1000 + i * 35
+    );
+
+  }
+
+}
+
+
+/* N TOKEN TASK */
+
+function demoTask(){
+
+  nToken += 1;
+
+  save();
+  update();
+
+  showToast(
+    "+1 N Token"
+  );
+
+}
+
+
+/* N TOKEN REFERRAL */
+
+function demoReferral(){
+
+  nToken += 1;
+
+  save();
+  update();
+
+  showToast(
+    "+1 N Token Referral"
+  );
+
+}
+
+
+/* WATCH AD */
+
+function watchAd(){
+
+  showToast(
+    "Real rewarded ad will be connected later"
+  );
+
+}
+
+
+/* NAVIGATION */
+
+function openPage(
+  name,
+  button
+){
+
+  document
+  .querySelectorAll(".page")
+  .forEach(
+    page =>
+    page.classList.remove(
+      "active"
+    )
+  );
+
+
+  document
+  .getElementById(
+    name + "Page"
+  )
+  .classList.add(
+    "active"
+  );
+
+
+  document
+  .querySelectorAll(
+    ".nav button"
+  )
+  .forEach(
+    btn =>
+    btn.classList.remove(
+      "active"
+    )
+  );
+
+
+  button.classList.add(
+    "active"
+  );
+
+}
+
+
+/* TELEGRAM BUTTON */
+
+function openTelegram(){
+
+  if(tg){
+
+    tg.openTelegramLink(
+      "https://t.me/SNJMiningbot"
+    );
+
+  }else{
+
+    window.open(
+      "https://t.me/SNJMiningbot",
+      "_blank"
+    );
+
+  }
+
+}
+
+
 /* TOAST */
 
-function showToast(message){
+function showToast(
+  message
+){
 
-    let toast =
-        document.getElementById("toast");
+  const toast =
+    document.getElementById(
+      "toast"
+    );
 
-    toast.textContent =
-        message;
 
-    toast.classList.add("show");
+  toast.textContent =
+    message;
 
-    setTimeout(()=>{
 
-        toast.classList.remove("show");
+  toast.classList.add(
+    "show"
+  );
 
-    },2500);
+
+  setTimeout(
+    ()=>{
+      toast.classList.remove(
+        "show"
+      );
+    },
+    2400
+  );
 
 }
 
 
 /* START */
 
-saveData();
-
+save();
 update();
 
 setInterval(
-    update,
-    1000
+  update,
+  1000
 );
 
 </script>
