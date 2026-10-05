@@ -2,696 +2,671 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width,initial-scale=1.0,
-      maximum-scale=1.0,user-scalable=no">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SNJ Mining</title>
-
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
 *{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  -webkit-tap-highlight-color:transparent;
-}
-
-:root{
-  --bg:#06101f;
-  --panel:#0a192c;
-  --panel2:#0d2139;
-  --gold:#f6c536;
-  --gold2:#ffdf68;
-  --text:#f5f7fb;
-  --muted:#9eacbd;
-  --blue:#4f8edb;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
 }
 
 body{
-  min-height:100vh;
-  background:
-    radial-gradient(circle at 50% 35%,
-      rgba(246,197,54,.12),
-      transparent 28%),
-    linear-gradient(180deg,#020914,#07182c 55%,#030b16);
-  color:var(--text);
-  font-family:Arial,sans-serif;
-  overflow-x:hidden;
+    background:#050b18;
+    color:#fff;
+    min-height:100vh;
+}
+
+.app{
+    max-width:480px;
+    margin:auto;
+    min-height:100vh;
+    padding-bottom:85px;
+    background:
+      radial-gradient(circle at 50% 20%,#172642 0%,#07101f 40%,#030712 100%);
 }
 
 /* HEADER */
 
 .header{
-  padding:15px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border-bottom:1px solid rgba(246,197,54,.35);
+    padding:18px 18px 10px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
 }
 
-.brand{
-  display:flex;
-  align-items:center;
-  gap:11px;
+.logo-title{
+    font-size:23px;
+    font-weight:800;
+    color:#ffd86b;
+    letter-spacing:1px;
 }
 
-.brand-logo{
-  width:58px;
-  height:58px;
-  border-radius:50%;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-
-  background:
-    radial-gradient(circle,
-      #fff4a6 0%,
-      #ffd83e 35%,
-      #b87908 68%,
-      #392000 100%);
-
-  border:2px solid var(--gold2);
-  color:#171005;
-  font-size:19px;
-  font-weight:900;
-
-  box-shadow:
-    0 0 12px rgba(246,197,54,.65),
-    inset 0 0 10px #fff6b0;
-}
-
-.brand-name{
-  font-size:23px;
-  font-weight:800;
-}
-
-.brand-name b{
-  color:var(--gold);
-}
-
-.subtitle{
-  color:#b9a66c;
-  font-size:13px;
-  margin-top:4px;
-}
-
-.header-buttons{
-  display:flex;
-  gap:7px;
-}
-
-.header-btn{
-  width:43px;
-  height:43px;
-  border-radius:50%;
-  border:1px solid #b98b18;
-  background:#0b1a2d;
-  color:var(--gold2);
-  font-size:20px;
-}
-
-/* BALANCE */
-
-.balance{
-  margin:16px;
-  padding:19px;
-  border:1px solid var(--gold);
-  border-radius:25px;
-  background:linear-gradient(
-    145deg,
-    rgba(13,31,52,.98),
-    rgba(5,16,29,.98)
-  );
-}
-
-.balance-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.balance-left{
-  display:flex;
-  align-items:center;
-  gap:13px;
-}
-
-.wallet-symbol{
-  font-size:38px;
-}
-
-.balance-title{
-  font-size:22px;
-  font-weight:800;
-}
-
-.balance-sub{
-  color:var(--muted);
-  margin-top:5px;
-  font-size:14px;
-}
-
-.balance-right{
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-
-.mini-coin{
-  width:48px;
-  height:48px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  background:
-    radial-gradient(circle,#fff18b,#e7a916);
-
-  color:#111;
-  font-size:12px;
-  font-weight:900;
-  border:2px solid #ffe06a;
-}
-
-.main-balance{
-  color:var(--gold2);
-  font-size:28px;
-  font-weight:900;
-}
-
-.balance-line{
-  height:1px;
-  background:#33445b;
-  margin:18px 0;
-}
-
-.balance-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-}
-
-.balance-stat{
-  text-align:center;
-  border-right:1px solid #33445b;
-}
-
-.balance-stat:last-child{
-  border-right:0;
-}
-
-.balance-stat span{
-  display:block;
-  color:#aeb8c7;
-  font-size:13px;
-}
-
-.balance-stat strong{
-  display:block;
-  color:var(--gold2);
-  margin-top:7px;
-  font-size:18px;
-}
-
-/* N TOKEN */
-
-.n-card{
-  margin:0 16px 18px;
-  padding:15px;
-  border:1px solid #557da8;
-  border-radius:22px;
-  background:linear-gradient(
-    145deg,
-    #0c2947,
-    #07182c
-  );
-
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-
-.n-left{
-  display:flex;
-  align-items:center;
-  gap:13px;
-}
-
-.n-logo{
-  width:56px;
-  height:56px;
-  border-radius:50%;
-  border:3px solid #dcb77d;
-
-  display:flex;
-  justify-content:center;
-  align-items:center;
-
-  color:#e5bd82;
-  font-size:31px;
-  font-weight:900;
-
-  box-shadow:
-    inset 0 0 12px rgba(255,211,130,.25);
-}
-
-.n-title{
-  font-size:18px;
-  font-weight:800;
-}
-
-.n-sub{
-  color:#9daabd;
-  margin-top:4px;
-  font-size:13px;
-}
-
-.n-value{
-  color:#ffd98c;
-  font-size:23px;
-  font-weight:900;
+.header-right{
+    width:40px;
+    height:40px;
+    border:1px solid #c99b35;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 }
 
 /* COIN */
 
-.mining{
-  text-align:center;
-  padding:5px 16px 125px;
+.coin-area{
+    text-align:center;
+    padding:15px 0 10px;
 }
 
 .coin{
-  width:250px;
-  height:250px;
-  margin:12px auto 18px;
+    width:155px;
+    height:155px;
+    margin:auto;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 
-  border-radius:50%;
+    background:
+      radial-gradient(circle at 35% 30%,
+      #fff1a3 0%,
+      #ffd34e 22%,
+      #d99b17 55%,
+      #80520b 100%);
 
-  background:
-    radial-gradient(circle at 50% 42%,
-      #fff5a0 0%,
-      #ffdc4a 29%,
-      #e9ab16 48%,
-      #8c5700 64%,
-      #eab323 77%,
-      #754500 90%,
-      #d8990c 100%);
+    border:7px solid #f3c64d;
 
-  border:7px solid #dca219;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  box-shadow:
-    0 0 18px rgba(255,213,57,.8),
-    0 0 50px rgba(255,201,35,.25),
-    inset 0 0 22px #fff3a0;
-
-  animation:coinPulse 2.5s infinite alternate;
+    box-shadow:
+      0 0 25px rgba(255,193,55,.35),
+      inset 0 0 20px rgba(255,255,255,.3);
 }
 
-@keyframes coinPulse{
-  from{
-    transform:scale(1);
-  }
-  to{
-    transform:scale(1.018);
-  }
+.coin span{
+    font-size:55px;
+    font-weight:900;
+    color:#17110a;
+    text-shadow:0 2px 2px rgba(255,255,255,.4);
 }
 
-.coin-inner{
-  width:188px;
-  height:188px;
-  border-radius:50%;
-
-  display:flex;
-  justify-content:center;
-  align-items:center;
-
-  background:
-    radial-gradient(circle,
-      #fff28b,
-      #ffd43c 55%,
-      #eaa814);
-
-  border:5px solid #fff0a0;
+.premium{
+    margin-top:10px;
+    font-size:12px;
+    color:#d9b45b;
+    letter-spacing:2px;
 }
 
-.coin-text{
-  color:#111;
-  font-size:65px;
-  font-weight:950;
-  letter-spacing:-4px;
+/* BALANCE */
+
+.balance-card{
+    margin:15px;
+    padding:18px;
+    border-radius:18px;
+
+    background:linear-gradient(
+      145deg,
+      rgba(20,34,57,.95),
+      rgba(7,15,29,.98)
+    );
+
+    border:1px solid rgba(220,171,61,.35);
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
 }
 
-.mining-heading{
-  color:var(--gold2);
-  font-size:27px;
-  font-weight:900;
-  letter-spacing:2px;
-  margin-bottom:15px;
+.balance-title{
+    color:#9ca9bd;
+    font-size:13px;
 }
 
-/* TIMER */
+.balance{
+    margin-top:5px;
+    font-size:32px;
+    font-weight:800;
+    color:#ffd35a;
+}
+
+.balance span{
+    font-size:15px;
+    color:#d7b45a;
+}
+
+/* THREE BALANCES */
+
+.balances{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:9px;
+    margin:15px;
+}
+
+.small-card{
+    padding:13px 7px;
+    text-align:center;
+    background:#0b1729;
+    border:1px solid #243754;
+    border-radius:14px;
+}
+
+.small-card h4{
+    font-size:11px;
+    color:#8291a8;
+}
+
+.small-card p{
+    margin-top:7px;
+    font-size:16px;
+    font-weight:bold;
+    color:#f5c94c;
+}
+
+/* N TOKEN */
+
+.n-token{
+    margin:15px;
+    padding:16px;
+
+    background:
+      linear-gradient(135deg,
+      rgba(35,42,62,.95),
+      rgba(12,20,34,.95));
+
+    border:1px solid rgba(255,204,83,.45);
+    border-radius:16px;
+}
+
+.n-header{
+    display:flex;
+    justify-content:space-between;
+}
+
+.n-header strong{
+    color:#ffd45a;
+}
+
+.n-token p{
+    margin-top:10px;
+    color:#9daabd;
+    font-size:12px;
+}
+
+/* MINING */
+
+.mining-card{
+    margin:15px;
+    padding:18px;
+    border-radius:20px;
+
+    background:#091526;
+    border:1px solid #263b58;
+}
+
+.mining-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.mining-title h3{
+    color:#fff;
+}
+
+.status{
+    color:#61d98a;
+    font-size:12px;
+}
 
 .timer{
-  padding:15px;
-  border:2px solid var(--gold);
-  border-radius:30px;
-  background:#061426;
-
-  font-size:42px;
-  font-weight:900;
-  letter-spacing:1px;
+    text-align:center;
+    font-size:38px;
+    font-weight:800;
+    margin:20px 0;
+    color:#ffd45a;
 }
 
 .rate{
-  color:#9daabd;
-  margin:15px 0;
-  font-size:16px;
+    text-align:center;
+    color:#9ba9bc;
+    font-size:13px;
 }
 
-.rate b{
-  color:var(--gold2);
+.progress{
+    height:8px;
+    background:#18283d;
+    border-radius:10px;
+    margin:18px 0;
+    overflow:hidden;
 }
 
-/* CLAIM */
+.progress-bar{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,#b87912,#ffe08a);
+    transition:.4s;
+}
+
+/* BUTTONS */
+
+.buttons{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+button{
+    border:none;
+    padding:14px;
+    border-radius:13px;
+    font-weight:bold;
+    cursor:pointer;
+}
 
 .claim{
-  width:100%;
-  border:0;
-  padding:19px;
-  border-radius:32px;
-
-  background:
-    linear-gradient(
-      90deg,
-      #d99c0c,
-      #ffe16b,
-      #dfa710
-    );
-
-  color:#111;
-  font-size:23px;
-  font-weight:950;
-
-  box-shadow:0 0 20px rgba(255,203,47,.25);
+    background:linear-gradient(135deg,#ffd85d,#bd7b0d);
+    color:#17110a;
 }
-
-.claim:active{
-  transform:scale(.97);
-}
-
-/* AD */
 
 .ad{
-  margin-top:13px;
-  padding:14px;
-  border:1px solid #4c79a7;
-  border-radius:20px;
-  background:#081c34;
-
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
+    background:#14243a;
+    border:1px solid #b68a2b;
+    color:#ffd45a;
 }
 
-.ad-title{
-  font-size:18px;
-  font-weight:800;
+/* MENU */
+
+.bottom-menu{
+    position:fixed;
+    bottom:0;
+    left:50%;
+    transform:translateX(-50%);
+    width:100%;
+    max-width:480px;
+    height:76px;
+
+    background:rgba(5,12,24,.97);
+    border-top:1px solid #243650;
+
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    z-index:100;
 }
 
-.ad-sub{
-  color:#9eacbd;
-  margin-top:4px;
-  font-size:13px;
+.menu-item{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    color:#78879b;
+    font-size:10px;
+    gap:5px;
 }
 
-.ad-button{
-  padding:12px 19px;
-  border:1px solid #e7bd31;
-  border-radius:14px;
-  background:#f4c733;
-  color:#111;
-  font-size:19px;
-  font-weight:900;
+.menu-item.active{
+    color:#ffd258;
 }
 
-/* NAV */
-
-.nav{
-  position:fixed;
-  left:9px;
-  right:9px;
-  bottom:7px;
-
-  height:78px;
-
-  display:grid;
-  grid-template-columns:repeat(6,1fr);
-
-  background:rgba(4,14,27,.97);
-  border:1px solid #c69a24;
-  border-radius:24px;
-
-  z-index:50;
-  backdrop-filter:blur(10px);
-}
-
-.nav-item{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-
-  color:#9aa8ba;
-  font-size:11px;
-  gap:4px;
-}
-
-.nav-icon{
-  font-size:25px;
-}
-
-.nav-item.active{
-  color:var(--gold2);
-}
-
-/* NOTIFICATION */
-
-.notice{
-  position:fixed;
-  top:15px;
-  left:50%;
-  transform:translateX(-50%);
-
-  padding:12px 18px;
-
-  background:#10243b;
-  border:1px solid var(--gold);
-  border-radius:20px;
-
-  color:#ffe071;
-  z-index:100;
-  display:none;
-
-  white-space:nowrap;
-}
-
-/* FLYING COINS */
-
-.fly{
-  position:fixed;
-
-  width:27px;
-  height:27px;
-
-  border-radius:50%;
-
-  display:flex;
-  justify-content:center;
-  align-items:center;
-
-  background:linear-gradient(#fff08b,#e6a80e);
-  border:2px solid #fff0a0;
-
-  color:#111;
-  font-size:9px;
-  font-weight:900;
-
-  pointer-events:none;
-  z-index:999;
-}
-
-/* MOBILE */
-
-@media(max-width:380px){
-
-  .brand-name{
+.menu-icon{
     font-size:20px;
-  }
+}
 
-  .coin{
-    width:220px;
-    height:220px;
-  }
+/* CLAIM ANIMATION */
 
-  .coin-inner{
-    width:166px;
-    height:166px;
-  }
+.fly-coin{
+    position:fixed;
+    font-size:28px;
+    pointer-events:none;
+    z-index:999;
+    animation:fly 1s ease-in forwards;
+}
 
-  .coin-text{
-    font-size:55px;
-  }
+@keyframes fly{
+    0%{
+        transform:translate(0,0) scale(1);
+        opacity:1;
+    }
 
-  .timer{
-    font-size:35px;
-  }
+    100%{
+        transform:translate(
+          var(--x),
+          var(--y)
+        ) scale(.2);
+        opacity:0;
+    }
+}
 
+.notification{
+    position:fixed;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#17263c;
+    border:1px solid #d1a53c;
+    color:#ffd968;
+    padding:13px 18px;
+    border-radius:12px;
+    z-index:1000;
+    display:none;
 }
 </style>
 </head>
 
 <body>
 
-<div class="notice" id="notice"></div>
+<div class="app">
 
-<!-- HEADER -->
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo-title">SNJ MINING</div>
 
-<header class="header">
-
-  <div class="brand">
-
-    <div class="brand-logo">SNJ</div>
-
-    <div>
-      <div class="brand-name">
-        <b>SNJ</b> Mining Bot
-      </div>
-
-      <div class="subtitle">
-        Mine Today • Build Tomorrow
-      </div>
+        <div class="header-right">
+            🔔
+        </div>
     </div>
 
-  </div>
+    <!-- GOLD COIN -->
+    <div class="coin-area">
+        <div class="coin">
+            <span>SNJ</span>
+        </div>
 
-  <div class="header-buttons">
-    <button class="header-btn">✈</button>
-    <button class="header-btn">⚙</button>
-  </div>
+        <div class="premium">
+            PREMIUM GOLD MINING
+        </div>
+    </div>
 
-</header>
-
-
-<!-- SNJ BALANCE -->
-
-<section class="balance">
-
-  <div class="balance-top">
-
-    <div class="balance-left">
-
-      <div class="wallet-symbol">💰</div>
-
-      <div>
+    <!-- MAIN BALANCE -->
+    <div class="balance-card">
         <div class="balance-title">
-          My SNJ Balance
+            My SNJ Balance
         </div>
 
-        <div class="balance-sub">
-          Total Balance
+        <div class="balance">
+            <span id="mainBalance">0.0000</span>
+            <span>SNJ</span>
         </div>
-      </div>
+    </div>
+
+    <!-- 3 BALANCES -->
+    <div class="balances">
+
+        <div class="small-card">
+            <h4>MINING</h4>
+            <p id="miningBalance">0.0000</p>
+        </div>
+
+        <div class="small-card">
+            <h4>WALLET</h4>
+            <p id="walletBalance">0.0000</p>
+        </div>
+
+        <div class="small-card">
+            <h4>N TOKEN</h4>
+            <p id="nBalance">0</p>
+        </div>
 
     </div>
 
-    <div class="balance-right">
+    <!-- N TOKEN -->
+    <div class="n-token">
 
-      <div class="mini-coin">
-        SNJ
-      </div>
+        <div class="n-header">
+            <strong>N Token</strong>
+            <strong id="nTokenValue">0 N</strong>
+        </div>
 
-      <div class="main-balance"
-           id="totalBalance">
-        0.00
-      </div>
-
-      <span>SNJ</span>
+        <p>
+            Referral Reward + Tasks Reward
+        </p>
 
     </div>
 
-  </div>
+    <!-- MINING -->
+    <div class="mining-card">
 
-  <div class="balance-line"></div>
+        <div class="mining-title">
+            <h3>⚡ Mining</h3>
 
-  <div class="balance-grid">
+            <div class="status" id="status">
+                ● MINING
+            </div>
+        </div>
 
-    <div class="balance-stat">
-      <span>⛏ Mining</span>
-      <strong id="pendingBalance">0.00</strong>
+        <div class="timer" id="timer">
+            04:00:00
+        </div>
+
+        <div class="rate">
+            Mining Rate:
+            <b>0.0100 SNJ / hour</b>
+        </div>
+
+        <div class="progress">
+            <div
+                class="progress-bar"
+                id="progressBar">
+            </div>
+        </div>
+
+        <div class="buttons">
+
+            <button
+                class="claim"
+                onclick="claimMining()">
+                💰 CLAIM
+            </button>
+
+            <button
+                class="ad"
+                onclick="watchAd()">
+                ▶ Watch Ad 2×
+            </button>
+
+        </div>
+
     </div>
 
-    <div class="balance-stat">
-      <span>💰 Wallet</span>
-      <strong id="walletBalance">0.00</strong>
+</div>
+
+
+<!-- BOTTOM MENU -->
+
+<div class="bottom-menu">
+
+    <div class="menu-item active">
+        <div class="menu-icon">⛏️</div>
+        Mine
     </div>
 
-    <div class="balance-stat">
-      <span>N Token</span>
-      <strong id="nTop">0.00</strong>
+    <div class="menu-item">
+        <div class="menu-icon">🚀</div>
+        Boost
     </div>
 
-  </div>
-
-</section>
-
-
-<!-- N TOKEN -->
-
-<section class="n-card">
-
-  <div class="n-left">
-
-    <div class="n-logo">
-      N
+    <div class="menu-item">
+        <div class="menu-icon">🎯</div>
+        Tasks
     </div>
 
-    <div>
-      <div class="n-title">
-        N TOKEN
-      </div>
-
-      <div class="n-sub">
-        Referral + Tasks Reward
-      </div>
+    <div class="menu-item">
+        <div class="menu-icon">👥</div>
+        Friends
     </div>
 
-  </div>
-
-  <div class="n-value">
-    <span id="nValue">0.00</span> N
-  </div>
-
-</section>
-
-
-<!-- MINING -->
-
-<main class="mining">
-
-  <div class="coin">
-
-    <div class="coin-inner">
-      <div class="coin-text">
-        SNJ
-      </div>
+    <div class="menu-item">
+        <div class="menu-icon">🔄</div>
+        Swap
     </div>
 
-  </div>
+    <div class="menu-item">
+        <div class="menu-icon">💼</div>
+        Wallet
+    </div>
 
-  <div class="mining-heading">
-    ⛏ MIN
+</div>
+
+<div
+    class="notification"
+    id="notification">
+    ⏰ Mining finished — Claim your SNJ!
+</div>
+
+
+<script>
+
+/* ==========================
+   SNJ MINING SETTINGS
+========================== */
+
+const MINING_TIME = 4 * 60 * 60;
+
+const MINING_RATE = 0.0100;
+
+
+/* ==========================
+   VARIABLES
+========================== */
+
+let remaining = MINING_TIME;
+
+let miningBalance = 0;
+
+let walletBalance = 0;
+
+let nBalance = 0;
+
+let miningFinished = false;
+
+
+/* ==========================
+   TIMER
+========================== */
+
+function updateTimer(){
+
+    if(remaining <= 0){
+
+        remaining = 0;
+
+        miningFinished = true;
+
+        document.getElementById("status")
+            .innerText = "● CLAIM REQUIRED";
+
+        document.getElementById("status")
+            .style.color = "#ff6767";
+
+        document.getElementById("notification")
+            .style.display = "block";
+
+        return;
+    }
+
+    let hours =
+        Math.floor(remaining / 3600);
+
+    let minutes =
+        Math.floor((remaining % 3600) / 60);
+
+    let seconds =
+        remaining % 60;
+
+    document.getElementById("timer")
+        .innerText =
+        String(hours).padStart(2,"0")
+        + ":" +
+        String(minutes).padStart(2,"0")
+        + ":" +
+        String(seconds).padStart(2,"0");
+
+    let progress =
+        ((MINING_TIME - remaining)
+        / MINING_TIME) * 100;
+
+    document.getElementById("progressBar")
+        .style.width = progress + "%";
+
+    remaining--;
+
+}
+
+
+setInterval(updateTimer,1000);
+
+
+/* ==========================
+   CLAIM
+========================== */
+
+function claimMining(){
+
+    if(!miningFinished){
+
+        showMessage(
+            "⏳ ৪ ঘণ্টা শেষ হলে Claim করতে পারবে"
+        );
+
+        return;
+    }
+
+    const earned = MINING_RATE * 4;
+
+    miningBalance += earned;
+
+    walletBalance += earned;
+
+    updateBalances();
+
+    createFlyingCoins();
+
+    miningFinished = false;
+
+    remaining = MINING_TIME;
+
+    document.getElementById("status")
+        .innerText = "● MINING";
+
+    document.getElementById("status")
+        .style.color = "#61d98a";
+
+    document.getElementById("notification")
+        .style.display = "none";
+
+}
+
+
+/* ==========================
+   WATCH AD 2X
+========================== */
+
+function watchAd(){
+
+    if(miningFinished){
+
+        showMessage(
+            "আগে Claim করুন"
+        );
+
+        return;
+    }
+
+    miningBalance += 0.0200;
+
+    updateBalances();
+
+    showMessage(
+        "🎁 Ad Reward: +0.0200 SNJ"
+    );
+
+}
+
+
+/* ==========================
+   BALANCE UPDATE
+========================== */
+
+function updateBalances(){
+
+    document.getElementById("mainBalance")
+        .innerText =
+        (miningBalance + walletBalance)
