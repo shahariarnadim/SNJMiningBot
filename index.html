@@ -1,339 +1,910 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SNJ Mining</title>
+
+<title>SNJ Mining Bot</title>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
 *{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
 }
 
 body{
-  min-height:100vh;
-  background:#050b18;
-  color:white;
-  font-family:Arial,sans-serif;
-  display:flex;
-  justify-content:center;
+    min-height:100vh;
+    font-family:Arial,sans-serif;
+    color:white;
+    background:
+        radial-gradient(circle at 50% 25%,#263b62 0%,#0a1427 35%,#030814 75%);
+    overflow-x:hidden;
+}
+
+body:before{
+    content:"";
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:0;
+    height:45%;
+    z-index:-1;
+    opacity:.35;
+    background:
+        linear-gradient(90deg,
+        transparent 0 3%,
+        #101d32 3% 8%,
+        transparent 8% 10%,
+        #172844 10% 16%,
+        transparent 16% 18%,
+        #0e1b30 18% 25%,
+        transparent 25% 27%,
+        #172844 27% 32%,
+        transparent 32% 35%,
+        #0c1930 35% 43%,
+        transparent 43% 45%,
+        #172844 45% 51%,
+        transparent 51% 54%,
+        #0d1b31 54% 62%,
+        transparent 62% 64%,
+        #172844 64% 71%,
+        transparent 71% 74%,
+        #0d1b31 74% 82%,
+        transparent 82% 84%,
+        #172844 84% 91%,
+        transparent 91%);
 }
 
 .app{
-  width:100%;
-  max-width:480px;
-  min-height:100vh;
-  padding:20px;
-  background:
-    radial-gradient(circle at top,#16233d 0%,#050b18 45%);
+    width:100%;
+    max-width:520px;
+    margin:auto;
+    padding:14px;
+    padding-bottom:100px;
 }
 
-.welcome{
-  position:fixed;
-  inset:0;
-  background:#050b18;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  z-index:99;
-  font-size:30px;
-  font-weight:bold;
-  color:#d8ad42;
+/* TOP BAR */
+
+.topbar{
+    height:78px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:10px 14px;
+    border:1px solid #c99722;
+    border-radius:24px;
+    background:linear-gradient(135deg,#071426,#101d31);
+    box-shadow:
+        0 0 20px #d9a92722,
+        inset 0 0 15px #d9a9270d;
 }
 
-.header{
-  text-align:center;
-  margin-top:20px;
-  margin-bottom:25px;
+.brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
 }
 
 .logo{
-  width:90px;
-  height:90px;
-  margin:auto;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:34px;
-  font-weight:bold;
-  color:#111;
-  background:linear-gradient(145deg,#fff0a8,#d8a928,#fff0a8);
-  box-shadow:0 0 30px rgba(224,180,65,.35);
+    width:55px;
+    height:55px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    font-size:19px;
+    font-weight:bold;
+    color:#17100a;
+    background:linear-gradient(145deg,#fff1a3,#d89f19,#fff0a0);
+    border:2px solid #f8d96b;
+    box-shadow:0 0 18px #f0bd3d66;
 }
 
-.title{
-  margin-top:12px;
-  font-size:25px;
-  font-weight:bold;
+.brandText b{
+    display:block;
+    font-size:22px;
 }
 
-.cards{
-  display:flex;
-  gap:12px;
-  margin-bottom:22px;
+.brandText b span{
+    color:#f2c744;
 }
 
-.card{
-  flex:1;
-  padding:18px 12px;
-  border:1px solid #283653;
-  border-radius:18px;
-  background:#0b1427;
-  text-align:center;
+.brandText small{
+    color:#f0d26c;
+    font-size:11px;
 }
 
-.label{
-  color:#8793aa;
-  font-size:13px;
+.topButtons{
+    display:flex;
+    gap:9px;
 }
 
-.balance{
-  margin-top:8px;
-  font-size:22px;
-  font-weight:bold;
-  color:#e5bb50;
+.circleBtn{
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    border:1px solid #e2b83d;
+    background:#101c30;
+    color:#ffd75a;
+    font-size:21px;
 }
 
-.mining{
-  padding:25px 20px;
-  border-radius:24px;
-  text-align:center;
-  background:linear-gradient(145deg,#0e1a31,#081020);
-  border:1px solid #2b3a59;
+/* BALANCE */
+
+.balanceBox{
+    margin-top:14px;
+    padding:18px;
+    border:1px solid #d8a52e;
+    border-radius:25px;
+    background:linear-gradient(135deg,#071426,#0d1b2f);
+    box-shadow:0 0 25px #d8a52e18;
 }
 
-.coin{
-  width:145px;
-  height:145px;
-  margin:5px auto 20px;
-  border-radius:50%;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:48px;
-  font-weight:bold;
-  color:#111;
-  background:linear-gradient(145deg,#fff3ae,#d8a52e,#fff0a1);
-  box-shadow:0 0 30px rgba(231,188,66,.28);
-  transition:.2s;
+.balanceTop{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
 }
 
-.coin:active{
-  transform:scale(.96);
-  box-shadow:0 0 45px rgba(255,215,90,.65);
+.balanceTitle{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.walletIcon{
+    font-size:35px;
+}
+
+.balanceTitle small{
+    display:block;
+    color:#bfc7d5;
+    margin-top:4px;
+}
+
+.mainBalance{
+    display:flex;
+    align-items:center;
+    gap:7px;
+}
+
+.miniCoin{
+    width:43px;
+    height:43px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    color:#15100a;
+    font-weight:bold;
+    background:linear-gradient(145deg,#fff2a5,#d8a52d,#ffe994);
+}
+
+.mainBalance strong{
+    font-size:34px;
+    color:#ffd653;
+}
+
+.mainBalance span{
+    color:#f4d75e;
+    font-size:18px;
+}
+
+.balanceLine{
+    height:1px;
+    background:#d9ae3a66;
+    margin:15px 0;
+}
+
+.balanceStats{
+    display:flex;
+    justify-content:space-around;
+    text-align:center;
+}
+
+.stat{
+    flex:1;
+}
+
+.stat:not(:last-child){
+    border-right:1px solid #65708755;
+}
+
+.stat small{
+    display:block;
+    color:#b6bfce;
+    margin-bottom:5px;
+}
+
+.stat b{
+    color:#ffd44f;
+    font-size:20px;
+}
+
+/* HERO */
+
+.hero{
+    text-align:center;
+    padding:28px 0 20px;
+}
+
+.heroCoin{
+    width:205px;
+    height:205px;
+    margin:auto;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    position:relative;
+    background:
+        radial-gradient(circle,#ffd951 0 45%,#d79816 46% 58%,#fff0a0 59% 62%,#a96d0c 63% 100%);
+    border:8px solid #d7a52d;
+    box-shadow:
+        0 0 20px #ffd84c88,
+        0 0 60px #d9a32e44,
+        inset 0 0 30px #fff1a077;
+    transition:.2s;
+}
+
+.heroCoin:before{
+    content:"";
+    position:absolute;
+    inset:13px;
+    border:2px solid #fff0a0;
+    border-radius:50%;
+}
+
+.heroCoin span{
+    position:relative;
+    z-index:2;
+    font-size:75px;
+    font-weight:bold;
+    color:#17100a;
+    text-shadow:0 2px 2px #fff3a055;
+}
+
+.heroCoin:active{
+    transform:scale(.94);
+    box-shadow:0 0 55px #ffd84caa;
+}
+
+.miningTitle{
+    margin-top:20px;
+    color:#ffd54e;
+    font-size:22px;
+    font-weight:bold;
+    letter-spacing:2px;
 }
 
 .timer{
-  font-size:28px;
-  font-weight:bold;
-  margin-bottom:8px;
+    margin:12px auto;
+    padding:10px;
+    border:2px solid #e1b631;
+    border-radius:30px;
+    max-width:360px;
+    background:#071426;
+    font-size:32px;
+    font-weight:bold;
 }
 
 .rate{
-  color:#9aa6bb;
-  margin-bottom:20px;
+    color:#aeb8c8;
+    margin-bottom:17px;
 }
 
-button{
-  width:100%;
-  border:0;
-  border-radius:15px;
-  padding:15px;
-  font-size:17px;
-  font-weight:bold;
-  cursor:pointer;
-}
+/* BUTTONS */
 
 .claim{
-  color:#111;
-  background:linear-gradient(90deg,#d6a52e,#ffe68a,#d6a52e);
+    width:100%;
+    padding:17px;
+    border:none;
+    border-radius:35px;
+    font-size:20px;
+    font-weight:bold;
+    color:#17100a;
+    background:linear-gradient(90deg,#d99e18,#ffe76c,#d99e18);
+    box-shadow:0 0 20px #e9bd3b55;
+}
+
+.claim:active{
+    transform:scale(.98);
 }
 
 .ad{
-  margin-top:14px;
-  color:white;
-  background:#182642;
-  border:1px solid #344563;
+    width:100%;
+    margin-top:12px;
+    padding:15px;
+    border-radius:20px;
+    color:white;
+    background:linear-gradient(90deg,#071b48,#0d3477,#071b48);
+    border:1px solid #168cff;
+    box-shadow:0 0 15px #168cff33;
 }
 
-.status{
-  margin-top:18px;
-  color:#8793aa;
-  font-size:13px;
-  text-align:center;
+.ad b{
+    color:#fff;
+    font-size:18px;
+}
+
+.ad small{
+    display:block;
+    color:#b9d9ff;
+    margin-top:4px;
+}
+
+/* BOTTOM NAV */
+
+.nav{
+    position:fixed;
+    left:50%;
+    bottom:8px;
+    transform:translateX(-50%);
+    width:calc(100% - 20px);
+    max-width:500px;
+    display:flex;
+    gap:5px;
+    padding:8px;
+    border:1px solid #b98920;
+    border-radius:22px;
+    background:#071120ee;
+    backdrop-filter:blur(10px);
+    z-index:20;
+}
+
+.nav button{
+    flex:1;
+    border:0;
+    background:transparent;
+    color:#b9c1ce;
+    padding:8px 2px;
+    border-radius:15px;
+    font-size:10px;
+}
+
+.nav button span{
+    display:block;
+    font-size:21px;
+    margin-bottom:3px;
+}
+
+.nav .active{
+    color:#ffd34c;
+    background:#c7972117;
+}
+
+/* TOAST */
+
+.toast{
+    position:fixed;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%) translateY(-100px);
+    padding:13px 20px;
+    border-radius:20px;
+    background:#15233a;
+    border:1px solid #e0b53c;
+    color:#ffd957;
+    transition:.3s;
+    z-index:50;
+}
+
+.toast.show{
+    transform:translateX(-50%) translateY(0);
+}
+
+/* MOBILE */
+
+@media(max-width:380px){
+    .mainBalance strong{
+        font-size:27px;
+    }
+
+    .heroCoin{
+        width:175px;
+        height:175px;
+    }
+
+    .heroCoin span{
+        font-size:62px;
+    }
+
+    .nav button{
+        font-size:8px;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<div class="welcome" id="welcome">
-  WELCOME TO SNJ
-</div>
-
 <div class="app">
 
-  <div class="header">
-    <div class="logo">SNJ</div>
-    <div class="title">SNJ MINING</div>
-  </div>
+    <!-- TOP -->
 
-  <div class="cards">
+    <div class="topbar">
 
-    <div class="card">
-      <div class="label">SNJ Balance</div>
-      <div class="balance" id="snjBalance">0.00</div>
+        <div class="brand">
+
+            <div class="logo">
+                SNJ
+            </div>
+
+            <div class="brandText">
+                <b><span>SNJ</span> Mining Bot</b>
+                <small>Mine Today • Build Tomorrow</small>
+            </div>
+
+        </div>
+
+        <div class="topButtons">
+            <button class="circleBtn" id="telegramBtn">➤</button>
+            <button class="circleBtn" id="settingsBtn">⚙</button>
+        </div>
+
     </div>
 
-    <div class="card">
-      <div class="label">N Token</div>
-      <div class="balance" id="nBalance">0.00</div>
+
+    <!-- BALANCE -->
+
+    <div class="balanceBox">
+
+        <div class="balanceTop">
+
+            <div class="balanceTitle">
+
+                <div class="walletIcon">👛</div>
+
+                <div>
+                    <b>My SNJ Balance</b>
+                    <small>Total Balance</small>
+                </div>
+
+            </div>
+
+            <div class="mainBalance">
+
+                <div class="miniCoin">SNJ</div>
+
+                <strong id="snjBalance">0.00</strong>
+
+                <span>SNJ</span>
+
+            </div>
+
+        </div>
+
+        <div class="balanceLine"></div>
+
+        <div class="balanceStats">
+
+            <div class="stat">
+                <small>⛏ Mining</small>
+                <b id="miningBalance">0.00</b>
+                <span> SNJ</span>
+            </div>
+
+            <div class="stat">
+                <small>👛 Wallet</small>
+                <b id="walletBalance">0.00</b>
+                <span> SNJ</span>
+            </div>
+
+            <div class="stat">
+                <small>N Token</small>
+                <b id="nBalance">0.00</b>
+            </div>
+
+        </div>
+
     </div>
 
-  </div>
 
-  <div class="mining">
+    <!-- MINING -->
 
-    <div class="coin">S</div>
+    <div class="hero">
 
-    <div class="timer" id="timer">04:00:00</div>
+        <div class="heroCoin" id="coin">
+            <span>S</span>
+        </div>
 
-    <div class="rate">
-      60 SNJ / 4 Hours
+        <div class="miningTitle">
+            ⛏ MINING
+        </div>
+
+        <div class="timer" id="timer">
+            04:00:00
+        </div>
+
+        <div class="rate">
+            Mining Rate • <b>60 SNJ / 4 Hours</b>
+        </div>
+
+        <button class="claim" id="claim">
+            🪙 CLAIM <span id="claimAmount">0.00</span> SNJ
+        </button>
+
+        <button class="ad" id="ad">
+
+            <b>▶ WATCH AD ×2</b>
+
+            <small>
+                Watch rewarded ads and earn more later
+            </small>
+
+        </button>
+
     </div>
-
-    <button class="claim" id="claim">
-      CLAIM SNJ
-    </button>
-
-    <button class="ad" id="ad">
-      WATCH AD ×2
-    </button>
-
-    <div class="status" id="status">
-      Mining ready
-    </div>
-
-  </div>
 
 </div>
 
+
+<!-- BOTTOM NAV -->
+
+<div class="nav">
+
+    <button class="active" data-name="Mine">
+        <span>⛏</span>
+        Mine
+    </button>
+
+    <button data-name="Boost">
+        <span>🚀</span>
+        Boost
+    </button>
+
+    <button data-name="Tasks">
+        <span>📋</span>
+        Tasks
+    </button>
+
+    <button data-name="Friends">
+        <span>👥</span>
+        Friends
+    </button>
+
+    <button data-name="Swap">
+        <span>↕</span>
+        Swap
+    </button>
+
+    <button data-name="Wallet">
+        <span>👛</span>
+        Wallet
+    </button>
+
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+
 <script>
+
+/* TELEGRAM */
 
 const tg = window.Telegram?.WebApp;
 
 if(tg){
-  tg.ready();
-  tg.expand();
 
-  try{
-    tg.setHeaderColor("#050b18");
-    tg.setBackgroundColor("#050b18");
-  }catch(e){}
+    tg.ready();
+
+    tg.expand();
+
+    try{
+        tg.setHeaderColor("#050b18");
+        tg.setBackgroundColor("#050b18");
+    }catch(e){}
+
 }
 
-setTimeout(()=>{
-  document.getElementById("welcome").style.display="none";
-},700);
 
+/* DATA */
 
-// Temporary local test storage.
-// পরে এটাকে real server/database-এর সাথে যুক্ত করব।
-
-let snj = Number(localStorage.getItem("snj") || 0);
-let nToken = Number(localStorage.getItem("nToken") || 0);
-
-let miningStart = Number(
-  localStorage.getItem("miningStart") || Date.now()
+let snj = Number(
+    localStorage.getItem("snjBalance") || 0
 );
 
-const miningTime = 4 * 60 * 60 * 1000;
-const maxReward = 60;
+let nToken = Number(
+    localStorage.getItem("nToken") || 0
+);
 
-function save(){
-  localStorage.setItem("snj",snj);
-  localStorage.setItem("nToken",nToken);
-  localStorage.setItem("miningStart",miningStart);
+let miningStart = Number(
+    localStorage.getItem("miningStart") || Date.now()
+);
+
+const MINING_TIME = 4 * 60 * 60 * 1000;
+
+const MAX_REWARD = 60;
+
+
+/* SAVE */
+
+function saveData(){
+
+    localStorage.setItem(
+        "snjBalance",
+        snj
+    );
+
+    localStorage.setItem(
+        "nToken",
+        nToken
+    );
+
+    localStorage.setItem(
+        "miningStart",
+        miningStart
+    );
+
 }
+
+
+/* UPDATE */
 
 function update(){
 
-  document.getElementById("snjBalance").textContent =
-    snj.toFixed(2);
+    let elapsed =
+        Date.now() - miningStart;
 
-  document.getElementById("nBalance").textContent =
-    nToken.toFixed(2);
+    let reward =
+        Math.min(
+            Math.max(
+                0,
+                elapsed / MINING_TIME
+            ) * MAX_REWARD,
+            MAX_REWARD
+        );
 
-  let elapsed = Date.now() - miningStart;
 
-  if(elapsed >= miningTime){
-    document.getElementById("timer").textContent="04:00:00";
-    document.getElementById("status").textContent=
-      "60 SNJ ready to claim";
-    return;
-  }
+    document.getElementById(
+        "snjBalance"
+    ).textContent =
+        snj.toFixed(2);
 
-  let remain = miningTime - elapsed;
 
-  let h = Math.floor(remain / 3600000);
-  let m = Math.floor((remain % 3600000) / 60000);
-  let s = Math.floor((remain % 60000) / 1000);
+    document.getElementById(
+        "walletBalance"
+    ).textContent =
+        snj.toFixed(2);
 
-  document.getElementById("timer").textContent =
-    String(h).padStart(2,"0")+":"+
-    String(m).padStart(2,"0")+":"+
-    String(s).padStart(2,"0");
 
-  let reward = (elapsed / miningTime) * maxReward;
+    document.getElementById(
+        "miningBalance"
+    ).textContent =
+        reward.toFixed(2);
 
-  document.getElementById("status").textContent =
-    "Mining: " + reward.toFixed(2) + " SNJ";
+
+    document.getElementById(
+        "nBalance"
+    ).textContent =
+        nToken.toFixed(2);
+
+
+    document.getElementById(
+        "claimAmount"
+    ).textContent =
+        reward.toFixed(2);
+
+
+    if(reward >= MAX_REWARD){
+
+        document.getElementById(
+            "timer"
+        ).textContent =
+            "READY";
+
+        return;
+
+    }
+
+
+    let remaining =
+        MINING_TIME - elapsed;
+
+
+    let h =
+        Math.floor(
+            remaining / 3600000
+        );
+
+    let m =
+        Math.floor(
+            (remaining % 3600000) / 60000
+        );
+
+    let s =
+        Math.floor(
+            (remaining % 60000) / 1000
+        );
+
+
+    document.getElementById(
+        "timer"
+    ).textContent =
+
+        String(h).padStart(2,"0")
+        + ":" +
+
+        String(m).padStart(2,"0")
+        + ":" +
+
+        String(s).padStart(2,"0");
+
 }
 
-document.getElementById("claim").onclick=()=>{
 
-  let elapsed = Date.now() - miningStart;
+/* CLAIM */
 
-  let reward = Math.min(
-    (elapsed / miningTime) * maxReward,
-    maxReward
-  );
+document.getElementById(
+    "claim"
+).onclick = function(){
 
-  if(reward <= 0){
-    return;
-  }
+    let elapsed =
+        Date.now() - miningStart;
 
-  snj += reward;
 
-  // নতুন ৪ ঘণ্টার mining cycle
-  miningStart = Date.now();
+    let reward =
+        Math.min(
+            Math.max(
+                0,
+                elapsed / MINING_TIME
+            ) * MAX_REWARD,
+            MAX_REWARD
+        );
 
-  save();
-  update();
 
-  document.getElementById("status").textContent =
-    "+" + reward.toFixed(2) + " SNJ Claimed!";
+    if(reward <= 0){
+
+        showToast(
+            "Mining শুরু হয়নি"
+        );
+
+        return;
+
+    }
+
+
+    snj += reward;
+
+    miningStart =
+        Date.now();
+
+
+    saveData();
+
+    update();
+
+    showToast(
+        "+" + reward.toFixed(2)
+        + " SNJ Claimed!"
+    );
+
 };
 
 
-document.getElementById("ad").onclick=()=>{
+/* COIN TAP */
 
-  document.getElementById("status").textContent =
-    "Rewarded Ad will be connected later.";
+document.getElementById(
+    "coin"
+).onclick = function(){
+
+    this.style.transform =
+        "scale(.94)";
+
+    setTimeout(()=>{
+        this.style.transform =
+            "";
+    },150);
 
 };
 
 
-setInterval(update,1000);
+/* AD */
 
-save();
+document.getElementById(
+    "ad"
+).onclick = function(){
+
+    showToast(
+        "Real rewarded ads will be connected later."
+    );
+
+};
+
+
+/* TOP BUTTONS */
+
+document.getElementById(
+    "telegramBtn"
+).onclick = function(){
+
+    if(tg){
+
+        tg.openTelegramLink(
+            "https://t.me/SNJMiningbot"
+        );
+
+    }
+
+};
+
+
+document.getElementById(
+    "settingsBtn"
+).onclick = function(){
+
+    showToast(
+        "Settings coming soon"
+    );
+
+};
+
+
+/* NAV */
+
+document.querySelectorAll(
+    ".nav button"
+).forEach(button=>{
+
+    button.onclick = function(){
+
+        document.querySelectorAll(
+            ".nav button"
+        ).forEach(b=>{
+            b.classList.remove("active");
+        });
+
+        this.classList.add("active");
+
+        let name =
+            this.dataset.name;
+
+        if(name !== "Mine"){
+
+            showToast(
+                name + " section coming soon"
+            );
+
+        }
+
+    };
+
+});
+
+
+/* TOAST */
+
+function showToast(message){
+
+    let toast =
+        document.getElementById("toast");
+
+    toast.textContent =
+        message;
+
+    toast.classList.add("show");
+
+    setTimeout(()=>{
+
+        toast.classList.remove("show");
+
+    },2500);
+
+}
+
+
+/* START */
+
+saveData();
+
 update();
+
+setInterval(
+    update,
+    1000
+);
 
 </script>
 
