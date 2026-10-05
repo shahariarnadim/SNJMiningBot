@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>SNJ Mining</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:#050b18;color:#fff;font-family:Arial,sans-serif}
+body{overflow-x:hidden}
+.app{width:100%;max-width:480px;min-height:100vh;margin:auto;padding:18px 15px 30px;background:radial-gradient(circle at 50% 10%,rgba(221,177,58,.12),transparent 28%),#050b18}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.logoText{font-size:21px;font-weight:900;letter-spacing:1px;color:#e8bd55}
+.menu{font-size:25px;color:#d8b65b}
+.balanceGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.balanceBox{background:linear-gradient(145deg,#111d32,#091222);border:1px solid rgba(224,184,76,.30);border-radius:16px;padding:13px;box-shadow:0 8px 25px rgba(0,0,0,.25)}
+.balanceTitle{color:#9ba8bd;font-size:12px;margin-bottom:6px}
+.balanceValue{font-size:20px;font-weight:900;color:#f0c85b;overflow:hidden;text-overflow:ellipsis}
+.nValue{color:#70c9ff}
+.miningCard{position:relative;text-align:center;padding:22px 15px 20px;border-radius:24px;background:linear-gradient(145deg,#101d33,#07101f);border:1px solid rgba(221,180,65,.35);box-shadow:0 15px 40px rgba(0,0,0,.35)}
+.status{font-size:13px;color:#79d69a;margin-bottom:10px}
+.coin{width:155px;height:155px;margin:5px auto 15px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 35% 25%,#fff0a8 0%,#e8bb4e 28%,#9b6c17 65%,#4e3508 100%);border:5px solid #d9a936;box-shadow:0 0 20px rgba(238,193,71,.35),inset 0 0 20px rgba(255,255,255,.22);cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
+.coin span{font-size:42px;font-weight:900;color:#fff4bd;text-shadow:0 2px 4px rgba(0,0,0,.55)}
+.coin.tap{transform:scale(.94);box-shadow:0 0 40px rgba(255,211,75,.8),inset 0 0 25px rgba(255,255,255,.35)}
+.timer{font-size:30px;font-weight:900;letter-spacing:2px;color:#fff;margin:5px 0}
+.rate{color:#9daac0;font-size:13px}
+.earned{margin-top:9px;color:#e7c15b;font-size:15px;font-weight:800}
+button{width:100%;border:0;border-radius:14px;padding:15px;margin-top:13px;font-size:16px;font-weight:900;cursor:pointer}
+.claim{background:linear-gradient(135deg,#f0c65d,#a87519);color:#101010;box-shadow:0 8px 22px rgba(214,166,52,.18)}
+.ad{background:#17263d;color:#fff;border:1px solid rgba(112,201,255,.28)}
+button:active{transform:scale(.98)}
+.sectionTitle{margin:20px 3px 8px;color:#d8b65b;font-size:14px;font-weight:900;letter-spacing:1px}
+.info{background:#0c1728;border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:13px;color:#8794a9;font-size:12px;line-height:1.5}
+#welcome{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;background:#050b18;color:#e8bd55;font-size:30px;font-weight:900;letter-spacing:2px;transition:opacity .25s,visibility .25s}
+#welcome.hide{opacity:0;visibility:hidden}
+.coinDrop{position:fixed;z-index:9999;width:25px;height:25px;border-radius:50%;background:radial-gradient(circle,#fff0a0,#d9a52e,#76500c);pointer-events:none;animation:coinFly .75s ease-in forwards}
+@keyframes coinFly{0%{opacity:1;transform:translate(0,0) scale(1) rotate(0)}45%{opacity:1;transform:translate(var(--x),var(--y)) scale(1.05) rotate(180deg)}100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(.25) rotate(360deg)}}
+.flash{position:fixed;inset:0;z-index:9998;pointer-events:none;background:rgba(255,211,77,.15);animation:flash .35s ease-out forwards}
+@keyframes flash{from{opacity:1}to{opacity:0}}
+</style>
+</head>
+<body>
+
+<div id="welcome">WELCOME TO SNJ</div>
+
+<div class="app">
+  <div class="header">
+    <div class="logoText">SNJ MINING</div>
+    <div class="menu">⋮</div>
+  </div>
+
+  <div class="balanceGrid">
+    <div class="balanceBox">
+      <div class="balanceTitle">🪙 SNJ BALANCE</div>
+      <div class="balanceValue" id="snjBalance">0.00</div>
+    </div>
+    <div class="balanceBox">
+      <div class="balanceTitle">🔵 N TOKEN</div>
+      <div class="balanceValue nValue" id="nBalance">0</div>
+    </div>
+  </div>
+
+  <div class="miningCard">
+    <div class="status">⛏️ MINING ACTIVE</div>
+
+    <div class="coin" id="coin" aria-label="SNJ coin">
+      <span>SNJ</span>
+    </div>
+
+    <div class="timer" id="timer">04:00:00</div>
+    <div class="rate">60 SNJ / 4 Hours</div>
+    <div class="earned">Available: <span id="earned">0.00</span> SNJ</div>
+
+    <button class="claim" id="claimBtn">CLAIM SNJ</button>
+    <button class="ad" id="adBtn">🎬 WATCH AD ×2 REWARD</button>
+  </div>
+
+  <div class="sectionTitle">⛏️ MINING</div>
+  <div class="info">
+    SNJ is mined through the active 4-hour cycle. N Token is not mined here.
+    N Token will later come from Referral and Tasks.
+  </div>
+</div>
+
+<script>
+/* FINAL FIXED MINING RULES */
+const MINING_DURATION = 4 * 60 * 60 * 1000;
+const MAX_REWARD = 60;
+const WELCOME_TIME = 700;
+const AD_MULTIPLIER = 2;
+
+let balance = Number(localStorage.getItem("snj_balance"));
+let nBalance = Number(localStorage.getItem("n_balance"));
+let miningStart = Number(localStorage.getItem("mining_start"));
+let miningClaimed = Number(localStorage.getItem("mining_claimed"));
+
+if (!Number.isFinite(balance)) balance = 0;
+if (!Number.isFinite(nBalance)) nBalance = 0;
+if (!Number.isFinite(miningClaimed)) miningClaimed = 0;
+
+if (!Number.isFinite(miningStart) || miningStart <= 0) {
+  miningStart = Date.now();
+  localStorage.setItem("mining_start", String(miningStart));
+}
+
+function saveData(){
+  localStorage.setItem("snj_balance", String(balance));
+  localStorage.setItem("n_balance", String(nBalance));
+  localStorage.setItem("mining_start", String(miningStart));
+  localStorage.setItem("mining_claimed", String(miningClaimed));
+}
+
+function getMiningReward(){
+  const elapsed = Math.max(0, Date.now() - miningStart);
+  const progress = Math.min(elapsed / MINING_DURATION, 1);
+  return MAX_REWARD * progress;
+}
+
+function getRemainingTime(){
+  return Math.max(0, miningStart + MINING_DURATION - Date.now());
+}
+
+function formatTime(ms){
+  let seconds = Math.floor(ms / 1000);
+  const h = Math.floor(seconds / 3600);
+  seconds %= 3600;
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+}
+
+function updateUI(){
+  const available = Math.max(0, getMiningReward() - miningClaimed);
+  document.getElementById("snjBalance").textContent = balance.toFixed(2);
+  document.getElementById("nBalance").textContent = Math.floor(nBalance);
+  document.getElementById("earned").textContent = available.toFixed(2);
+  document.getElementById("timer").textContent = formatTime(getRemainingTime());
+}
+
+document.getElementById("coin").addEventListener("click", function(){
+  this.classList.add("tap");
+  setTimeout(() => this.classList.remove("tap"), 150);
+});
+
+function createClaimCoins(){
+  const button = document.getElementById("claimBtn");
+  const rect = button.getBoundingClientRect();
+  const targetX = rect.left + rect.width / 2;
+  const targetY = rect.top + 10;
+  const startX = window.innerWidth / 2;
+  const startY = window.innerHeight * 0.45;
+
+  for(let i=0;i<8;i++){
+    const coin = document.createElement("div");
+    coin.className = "coinDrop";
+    coin.style.left = startX + "px";
+    coin.style.top = startY + "px";
+    coin.style.setProperty("--x", ((Math.random()-0.5)*130)+"px");
+    coin.style.setProperty("--y", ((Math.random()-0.5)*100)+"px");
+    coin.style.setProperty("--tx", (targetX-startX)+"px");
+    coin.style.setProperty("--ty", (targetY-startY)+"px");
+    document.body.appendChild(coin);
+    setTimeout(() => coin.remove(), 800);
+  }
+
+  const flash = document.createElement("div");
+  flash.className = "flash";
+  document.body.appendChild(flash);
+  setTimeout(() => flash.remove(), 400);
+}
+
+document.getElementById("claimBtn").addEventListener("click", function(){
+  const currentReward = getMiningReward();
+  const reward = Math.max(0, currentReward - miningClaimed);
+
+  if(reward <= 0){
+    alert("No SNJ available to claim yet.");
+    return;
+  }
+
+  balance += reward;
+  createClaimCoins();
+
+  /* Claim starts a fresh 4-hour cycle */
+  miningStart = Date.now();
+  miningClaimed = 0;
+
+  saveData();
+  updateUI();
+});
+
+document.getElementById("adBtn").addEventListener("click", function(){
+  alert("Real rewarded ad is not connected yet. No fake reward has been added.");
+});
+
+setTimeout(() => {
+  document.getElementById("welcome").classList.add("hide");
+}, WELCOME_TIME);
+
+setInterval(updateUI, 1000);
+updateUI();
+</script>
+</body>
+</html>
