@@ -1,1 +1,341 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SNJ Mining</title>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  min-height:100vh;
+  background:#050b18;
+  color:white;
+  font-family:Arial,sans-serif;
+  display:flex;
+  justify-content:center;
+}
+
+.app{
+  width:100%;
+  max-width:480px;
+  min-height:100vh;
+  padding:20px;
+  background:
+    radial-gradient(circle at top,#16233d 0%,#050b18 45%);
+}
+
+.welcome{
+  position:fixed;
+  inset:0;
+  background:#050b18;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:99;
+  font-size:30px;
+  font-weight:bold;
+  color:#d8ad42;
+}
+
+.header{
+  text-align:center;
+  margin-top:20px;
+  margin-bottom:25px;
+}
+
+.logo{
+  width:90px;
+  height:90px;
+  margin:auto;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:34px;
+  font-weight:bold;
+  color:#111;
+  background:linear-gradient(145deg,#fff0a8,#d8a928,#fff0a8);
+  box-shadow:0 0 30px rgba(224,180,65,.35);
+}
+
+.title{
+  margin-top:12px;
+  font-size:25px;
+  font-weight:bold;
+}
+
+.cards{
+  display:flex;
+  gap:12px;
+  margin-bottom:22px;
+}
+
+.card{
+  flex:1;
+  padding:18px 12px;
+  border:1px solid #283653;
+  border-radius:18px;
+  background:#0b1427;
+  text-align:center;
+}
+
+.label{
+  color:#8793aa;
+  font-size:13px;
+}
+
+.balance{
+  margin-top:8px;
+  font-size:22px;
+  font-weight:bold;
+  color:#e5bb50;
+}
+
+.mining{
+  padding:25px 20px;
+  border-radius:24px;
+  text-align:center;
+  background:linear-gradient(145deg,#0e1a31,#081020);
+  border:1px solid #2b3a59;
+}
+
+.coin{
+  width:145px;
+  height:145px;
+  margin:5px auto 20px;
+  border-radius:50%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:48px;
+  font-weight:bold;
+  color:#111;
+  background:linear-gradient(145deg,#fff3ae,#d8a52e,#fff0a1);
+  box-shadow:0 0 30px rgba(231,188,66,.28);
+  transition:.2s;
+}
+
+.coin:active{
+  transform:scale(.96);
+  box-shadow:0 0 45px rgba(255,215,90,.65);
+}
+
+.timer{
+  font-size:28px;
+  font-weight:bold;
+  margin-bottom:8px;
+}
+
+.rate{
+  color:#9aa6bb;
+  margin-bottom:20px;
+}
+
+button{
+  width:100%;
+  border:0;
+  border-radius:15px;
+  padding:15px;
+  font-size:17px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.claim{
+  color:#111;
+  background:linear-gradient(90deg,#d6a52e,#ffe68a,#d6a52e);
+}
+
+.ad{
+  margin-top:14px;
+  color:white;
+  background:#182642;
+  border:1px solid #344563;
+}
+
+.status{
+  margin-top:18px;
+  color:#8793aa;
+  font-size:13px;
+  text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="welcome" id="welcome">
+  WELCOME TO SNJ
+</div>
+
+<div class="app">
+
+  <div class="header">
+    <div class="logo">SNJ</div>
+    <div class="title">SNJ MINING</div>
+  </div>
+
+  <div class="cards">
+
+    <div class="card">
+      <div class="label">SNJ Balance</div>
+      <div class="balance" id="snjBalance">0.00</div>
+    </div>
+
+    <div class="card">
+      <div class="label">N Token</div>
+      <div class="balance" id="nBalance">0.00</div>
+    </div>
+
+  </div>
+
+  <div class="mining">
+
+    <div class="coin">S</div>
+
+    <div class="timer" id="timer">04:00:00</div>
+
+    <div class="rate">
+      60 SNJ / 4 Hours
+    </div>
+
+    <button class="claim" id="claim">
+      CLAIM SNJ
+    </button>
+
+    <button class="ad" id="ad">
+      WATCH AD ×2
+    </button>
+
+    <div class="status" id="status">
+      Mining ready
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+const tg = window.Telegram?.WebApp;
+
+if(tg){
+  tg.ready();
+  tg.expand();
+
+  try{
+    tg.setHeaderColor("#050b18");
+    tg.setBackgroundColor("#050b18");
+  }catch(e){}
+}
+
+setTimeout(()=>{
+  document.getElementById("welcome").style.display="none";
+},700);
+
+
+// Temporary local test storage.
+// পরে এটাকে real server/database-এর সাথে যুক্ত করব।
+
+let snj = Number(localStorage.getItem("snj") || 0);
+let nToken = Number(localStorage.getItem("nToken") || 0);
+
+let miningStart = Number(
+  localStorage.getItem("miningStart") || Date.now()
+);
+
+const miningTime = 4 * 60 * 60 * 1000;
+const maxReward = 60;
+
+function save(){
+  localStorage.setItem("snj",snj);
+  localStorage.setItem("nToken",nToken);
+  localStorage.setItem("miningStart",miningStart);
+}
+
+function update(){
+
+  document.getElementById("snjBalance").textContent =
+    snj.toFixed(2);
+
+  document.getElementById("nBalance").textContent =
+    nToken.toFixed(2);
+
+  let elapsed = Date.now() - miningStart;
+
+  if(elapsed >= miningTime){
+    document.getElementById("timer").textContent="04:00:00";
+    document.getElementById("status").textContent=
+      "60 SNJ ready to claim";
+    return;
+  }
+
+  let remain = miningTime - elapsed;
+
+  let h = Math.floor(remain / 3600000);
+  let m = Math.floor((remain % 3600000) / 60000);
+  let s = Math.floor((remain % 60000) / 1000);
+
+  document.getElementById("timer").textContent =
+    String(h).padStart(2,"0")+":"+
+    String(m).padStart(2,"0")+":"+
+    String(s).padStart(2,"0");
+
+  let reward = (elapsed / miningTime) * maxReward;
+
+  document.getElementById("status").textContent =
+    "Mining: " + reward.toFixed(2) + " SNJ";
+}
+
+document.getElementById("claim").onclick=()=>{
+
+  let elapsed = Date.now() - miningStart;
+
+  let reward = Math.min(
+    (elapsed / miningTime) * maxReward,
+    maxReward
+  );
+
+  if(reward <= 0){
+    return;
+  }
+
+  snj += reward;
+
+  // নতুন ৪ ঘণ্টার mining cycle
+  miningStart = Date.now();
+
+  save();
+  update();
+
+  document.getElementById("status").textContent =
+    "+" + reward.toFixed(2) + " SNJ Claimed!";
+};
+
+
+document.getElementById("ad").onclick=()=>{
+
+  document.getElementById("status").textContent =
+    "Rewarded Ad will be connected later.";
+
+};
+
+
+setInterval(update,1000);
+
+save();
+update();
+
+</script>
+
+</body>
+</html>
