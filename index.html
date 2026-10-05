@@ -1,59 +1,697 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SNJ Mining Bot</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            background-color: #0b0f19;
-            color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow-x: hidden;
-        }
-        .gold-border {
-            border: 1px solid rgba(212, 175, 55, 0.4);
-        }
-        .gold-glow {
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.25);
-        }
-        .gold-glow-strong {
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.5);
-        }
-        .gold-text {
-            color: #f3e5ab;
-        }
-        .bg-dark-card {
-            background: linear-gradient(135deg, #131b2e 0%, #0a0e17 100%);
-        }
-        .btn-gold-gradient {
-            background: linear-gradient(180deg, #ffd700 0%, #cca100 100%);
-            color: #0b0f19;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1.0,
+      maximum-scale=1.0,user-scalable=no">
+
+<title>SNJ Mining</title>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  -webkit-tap-highlight-color:transparent;
+}
+
+:root{
+  --bg:#06101f;
+  --panel:#0a192c;
+  --panel2:#0d2139;
+  --gold:#f6c536;
+  --gold2:#ffdf68;
+  --text:#f5f7fb;
+  --muted:#9eacbd;
+  --blue:#4f8edb;
+}
+
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 50% 35%,
+      rgba(246,197,54,.12),
+      transparent 28%),
+    linear-gradient(180deg,#020914,#07182c 55%,#030b16);
+  color:var(--text);
+  font-family:Arial,sans-serif;
+  overflow-x:hidden;
+}
+
+/* HEADER */
+
+.header{
+  padding:15px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid rgba(246,197,54,.35);
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+
+.brand-logo{
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  background:
+    radial-gradient(circle,
+      #fff4a6 0%,
+      #ffd83e 35%,
+      #b87908 68%,
+      #392000 100%);
+
+  border:2px solid var(--gold2);
+  color:#171005;
+  font-size:19px;
+  font-weight:900;
+
+  box-shadow:
+    0 0 12px rgba(246,197,54,.65),
+    inset 0 0 10px #fff6b0;
+}
+
+.brand-name{
+  font-size:23px;
+  font-weight:800;
+}
+
+.brand-name b{
+  color:var(--gold);
+}
+
+.subtitle{
+  color:#b9a66c;
+  font-size:13px;
+  margin-top:4px;
+}
+
+.header-buttons{
+  display:flex;
+  gap:7px;
+}
+
+.header-btn{
+  width:43px;
+  height:43px;
+  border-radius:50%;
+  border:1px solid #b98b18;
+  background:#0b1a2d;
+  color:var(--gold2);
+  font-size:20px;
+}
+
+/* BALANCE */
+
+.balance{
+  margin:16px;
+  padding:19px;
+  border:1px solid var(--gold);
+  border-radius:25px;
+  background:linear-gradient(
+    145deg,
+    rgba(13,31,52,.98),
+    rgba(5,16,29,.98)
+  );
+}
+
+.balance-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.balance-left{
+  display:flex;
+  align-items:center;
+  gap:13px;
+}
+
+.wallet-symbol{
+  font-size:38px;
+}
+
+.balance-title{
+  font-size:22px;
+  font-weight:800;
+}
+
+.balance-sub{
+  color:var(--muted);
+  margin-top:5px;
+  font-size:14px;
+}
+
+.balance-right{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.mini-coin{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:
+    radial-gradient(circle,#fff18b,#e7a916);
+
+  color:#111;
+  font-size:12px;
+  font-weight:900;
+  border:2px solid #ffe06a;
+}
+
+.main-balance{
+  color:var(--gold2);
+  font-size:28px;
+  font-weight:900;
+}
+
+.balance-line{
+  height:1px;
+  background:#33445b;
+  margin:18px 0;
+}
+
+.balance-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+}
+
+.balance-stat{
+  text-align:center;
+  border-right:1px solid #33445b;
+}
+
+.balance-stat:last-child{
+  border-right:0;
+}
+
+.balance-stat span{
+  display:block;
+  color:#aeb8c7;
+  font-size:13px;
+}
+
+.balance-stat strong{
+  display:block;
+  color:var(--gold2);
+  margin-top:7px;
+  font-size:18px;
+}
+
+/* N TOKEN */
+
+.n-card{
+  margin:0 16px 18px;
+  padding:15px;
+  border:1px solid #557da8;
+  border-radius:22px;
+  background:linear-gradient(
+    145deg,
+    #0c2947,
+    #07182c
+  );
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.n-left{
+  display:flex;
+  align-items:center;
+  gap:13px;
+}
+
+.n-logo{
+  width:56px;
+  height:56px;
+  border-radius:50%;
+  border:3px solid #dcb77d;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  color:#e5bd82;
+  font-size:31px;
+  font-weight:900;
+
+  box-shadow:
+    inset 0 0 12px rgba(255,211,130,.25);
+}
+
+.n-title{
+  font-size:18px;
+  font-weight:800;
+}
+
+.n-sub{
+  color:#9daabd;
+  margin-top:4px;
+  font-size:13px;
+}
+
+.n-value{
+  color:#ffd98c;
+  font-size:23px;
+  font-weight:900;
+}
+
+/* COIN */
+
+.mining{
+  text-align:center;
+  padding:5px 16px 125px;
+}
+
+.coin{
+  width:250px;
+  height:250px;
+  margin:12px auto 18px;
+
+  border-radius:50%;
+
+  background:
+    radial-gradient(circle at 50% 42%,
+      #fff5a0 0%,
+      #ffdc4a 29%,
+      #e9ab16 48%,
+      #8c5700 64%,
+      #eab323 77%,
+      #754500 90%,
+      #d8990c 100%);
+
+  border:7px solid #dca219;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  box-shadow:
+    0 0 18px rgba(255,213,57,.8),
+    0 0 50px rgba(255,201,35,.25),
+    inset 0 0 22px #fff3a0;
+
+  animation:coinPulse 2.5s infinite alternate;
+}
+
+@keyframes coinPulse{
+  from{
+    transform:scale(1);
+  }
+  to{
+    transform:scale(1.018);
+  }
+}
+
+.coin-inner{
+  width:188px;
+  height:188px;
+  border-radius:50%;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  background:
+    radial-gradient(circle,
+      #fff28b,
+      #ffd43c 55%,
+      #eaa814);
+
+  border:5px solid #fff0a0;
+}
+
+.coin-text{
+  color:#111;
+  font-size:65px;
+  font-weight:950;
+  letter-spacing:-4px;
+}
+
+.mining-heading{
+  color:var(--gold2);
+  font-size:27px;
+  font-weight:900;
+  letter-spacing:2px;
+  margin-bottom:15px;
+}
+
+/* TIMER */
+
+.timer{
+  padding:15px;
+  border:2px solid var(--gold);
+  border-radius:30px;
+  background:#061426;
+
+  font-size:42px;
+  font-weight:900;
+  letter-spacing:1px;
+}
+
+.rate{
+  color:#9daabd;
+  margin:15px 0;
+  font-size:16px;
+}
+
+.rate b{
+  color:var(--gold2);
+}
+
+/* CLAIM */
+
+.claim{
+  width:100%;
+  border:0;
+  padding:19px;
+  border-radius:32px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #d99c0c,
+      #ffe16b,
+      #dfa710
+    );
+
+  color:#111;
+  font-size:23px;
+  font-weight:950;
+
+  box-shadow:0 0 20px rgba(255,203,47,.25);
+}
+
+.claim:active{
+  transform:scale(.97);
+}
+
+/* AD */
+
+.ad{
+  margin-top:13px;
+  padding:14px;
+  border:1px solid #4c79a7;
+  border-radius:20px;
+  background:#081c34;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.ad-title{
+  font-size:18px;
+  font-weight:800;
+}
+
+.ad-sub{
+  color:#9eacbd;
+  margin-top:4px;
+  font-size:13px;
+}
+
+.ad-button{
+  padding:12px 19px;
+  border:1px solid #e7bd31;
+  border-radius:14px;
+  background:#f4c733;
+  color:#111;
+  font-size:19px;
+  font-weight:900;
+}
+
+/* NAV */
+
+.nav{
+  position:fixed;
+  left:9px;
+  right:9px;
+  bottom:7px;
+
+  height:78px;
+
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+
+  background:rgba(4,14,27,.97);
+  border:1px solid #c69a24;
+  border-radius:24px;
+
+  z-index:50;
+  backdrop-filter:blur(10px);
+}
+
+.nav-item{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+
+  color:#9aa8ba;
+  font-size:11px;
+  gap:4px;
+}
+
+.nav-icon{
+  font-size:25px;
+}
+
+.nav-item.active{
+  color:var(--gold2);
+}
+
+/* NOTIFICATION */
+
+.notice{
+  position:fixed;
+  top:15px;
+  left:50%;
+  transform:translateX(-50%);
+
+  padding:12px 18px;
+
+  background:#10243b;
+  border:1px solid var(--gold);
+  border-radius:20px;
+
+  color:#ffe071;
+  z-index:100;
+  display:none;
+
+  white-space:nowrap;
+}
+
+/* FLYING COINS */
+
+.fly{
+  position:fixed;
+
+  width:27px;
+  height:27px;
+
+  border-radius:50%;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  background:linear-gradient(#fff08b,#e6a80e);
+  border:2px solid #fff0a0;
+
+  color:#111;
+  font-size:9px;
+  font-weight:900;
+
+  pointer-events:none;
+  z-index:999;
+}
+
+/* MOBILE */
+
+@media(max-width:380px){
+
+  .brand-name{
+    font-size:20px;
+  }
+
+  .coin{
+    width:220px;
+    height:220px;
+  }
+
+  .coin-inner{
+    width:166px;
+    height:166px;
+  }
+
+  .coin-text{
+    font-size:55px;
+  }
+
+  .timer{
+    font-size:35px;
+  }
+
+}
+</style>
 </head>
-<body class="flex justify-center items-center min-h-screen p-0 sm:p-4">
 
-    <!-- Mobile Screen Container -->
-    <div class="w-full max-w-md bg-[#0b0f19] min-h-screen sm:min-h-[850px] sm:rounded-3xl flex flex-col justify-between relative gold-border gold-glow overflow-hidden shadow-2xl pb-20">
+<body>
 
-        <!-- HEADER SECTION -->
-        <header class="flex justify-between items-center px-4 py-3 bg-dark-card/80 backdrop-blur-md border-b border-amber-500/20 z-20">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-600 to-yellow-300 flex items-center justify-center gold-glow font-bold text-black text-xl border border-yellow-200">
-                    👑
-                </div>
-                <div>
-                    <h1 class="font-bold text-base tracking-wide gold-text flex items-center gap-1">
-                        SNJ Mining Bot
-                    </h1>
-                    <p class="text-[11px] text-gray-400">Mine Today • Build Tomorrow</p>
-                </div>
-            </div>
-            <div class="flex items-center space-x-2">
-                <button class="w-9 h-9 rounded-xl bg-dark-card gold-border flex items-center justify-center text-amber-400 hover:bg-amber-500/10 transition">
-                    <i class="fa-brands fa-telegram text-lg
+<div class="notice" id="notice"></div>
+
+<!-- HEADER -->
+
+<header class="header">
+
+  <div class="brand">
+
+    <div class="brand-logo">SNJ</div>
+
+    <div>
+      <div class="brand-name">
+        <b>SNJ</b> Mining Bot
+      </div>
+
+      <div class="subtitle">
+        Mine Today • Build Tomorrow
+      </div>
+    </div>
+
+  </div>
+
+  <div class="header-buttons">
+    <button class="header-btn">✈</button>
+    <button class="header-btn">⚙</button>
+  </div>
+
+</header>
+
+
+<!-- SNJ BALANCE -->
+
+<section class="balance">
+
+  <div class="balance-top">
+
+    <div class="balance-left">
+
+      <div class="wallet-symbol">💰</div>
+
+      <div>
+        <div class="balance-title">
+          My SNJ Balance
+        </div>
+
+        <div class="balance-sub">
+          Total Balance
+        </div>
+      </div>
+
+    </div>
+
+    <div class="balance-right">
+
+      <div class="mini-coin">
+        SNJ
+      </div>
+
+      <div class="main-balance"
+           id="totalBalance">
+        0.00
+      </div>
+
+      <span>SNJ</span>
+
+    </div>
+
+  </div>
+
+  <div class="balance-line"></div>
+
+  <div class="balance-grid">
+
+    <div class="balance-stat">
+      <span>⛏ Mining</span>
+      <strong id="pendingBalance">0.00</strong>
+    </div>
+
+    <div class="balance-stat">
+      <span>💰 Wallet</span>
+      <strong id="walletBalance">0.00</strong>
+    </div>
+
+    <div class="balance-stat">
+      <span>N Token</span>
+      <strong id="nTop">0.00</strong>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- N TOKEN -->
+
+<section class="n-card">
+
+  <div class="n-left">
+
+    <div class="n-logo">
+      N
+    </div>
+
+    <div>
+      <div class="n-title">
+        N TOKEN
+      </div>
+
+      <div class="n-sub">
+        Referral + Tasks Reward
+      </div>
+    </div>
+
+  </div>
+
+  <div class="n-value">
+    <span id="nValue">0.00</span> N
+  </div>
+
+</section>
+
+
+<!-- MINING -->
+
+<main class="mining">
+
+  <div class="coin">
+
+    <div class="coin-inner">
+      <div class="coin-text">
+        SNJ
+      </div>
+    </div>
+
+  </div>
+
+  <div class="mining-heading">
+    ⛏ MIN
